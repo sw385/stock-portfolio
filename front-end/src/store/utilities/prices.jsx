@@ -1,29 +1,55 @@
 import axios from "axios"
 
 // ACTION TYPES
-const GET_OFFICIAL = "GET_OFFICIAL"
+const GET_CURRENT_PRICE = "GET_CURRENT_PRICE"
+const GET_OPEN_PRICE = "GET_OPEN_PRICE"
 
 // ACTION CREATORS
 /* ** move api keys out ** */
 
-const getOfficial = official => {
+const storeCurrentPrice = (symbol, price) => {
   return {
-    type: GET_OFFICIAL,
-    payload: official
+    type: GET_CURRENT_PRICE,
+    payload: symbol, price
+  }
+}
+const storeOpenPrice = (symbol, price) => {
+  return {
+    type: GET_OPEN_PRICE,
+    payload: symbol, price
   }
 }
 
 // THUNK CREATORS
-export const getOfficialThunk = address => async dispatch => {
+export const getCurrentPriceThunk = symbol => async dispatch => {
   try {
-    // Query the api for the officials associated with the given address
+    // Query the api for the current price of the symbol
+    let apikey = "HA2BAXO7NH22OSEI"
     const data = await axios.get(
-      `https://www.googleapis.com/civicinfo/v2/representatives?key=AIzaSyCzgqBJLDzmJQo5Cj7PVBKr7DS8fdH-c8M&address=${address.city}-${address.state}-${address.zip}`
+      `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${symbol}&apikey=${apikey}`
     )
-    console.log(data)
-    dispatch(getOfficial(data))
+    console.log("getCurrentPriceThunk", data)
+    let price = data["data"]["Global Quote"]["05. price"]
+    dispatch(storeCurrentPrice(symbol, price))
   } catch (error) {
-    console.log("Error in getOfficialThunk:", error)
+    console.log("Error in getCurrentPriceThunk:", error)
+  }
+}
+export const getOpenPriceThunk = symbol => async dispatch => {
+  try {
+    // Query the api for the opening price of the symbol
+    let apikey = "HA2BAXO7NH22OSEI"
+    /*const data = await axios.get(
+      `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=${symbol}&apikey=${apikey}`
+    )*/
+    const data = await axios.get(
+      `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${symbol}&apikey=${apikey}`
+    )
+    console.log("getOpenPriceThunk", data)
+    let price = data["data"]["Global Quote"]["02. open"]
+    dispatch(storeOpenPrice(symbol, price))
+  } catch (error) {
+    console.log("Error in getOpenPriceThunk:", error)
   }
 }
 
@@ -31,11 +57,19 @@ export const getOfficialThunk = address => async dispatch => {
 const reducer = (state = {}, action) => {
   switch (action.type) {
     
-    case GET_OFFICIAL:
-      // create a new object, copy over everything from state, then add the new officials data that was fetched
+    case GET_CURRENT_PRICE:
+      // create a new object, copy over everything from state, then add the new price data that was fetched
       return {
-        ...state,
-        officials: action.payload
+        // ...state,
+        // officials: action.payload
+        state
+      }
+    case GET_OPEN_PRICE:
+      // create a new object, copy over everything from state, then add the new price data that was fetched
+      return {
+        // ...state,
+        // officials: action.payload
+        state
       }
     default:
       return state
