@@ -10,7 +10,11 @@ class HomeContainer extends Component {
   }
 
   componentDidMount = () => {
-    this.props.getPricesThunk("mmm");
+    //this.props.getPricesThunk("SPOT");
+    //this.props.getPricesThunk("mmm");
+    //this.props.getPricesThunk("atvi");
+    this.props.getPricesThunk(["spot", "mmm", "atvi"]);
+    this.props.getPricesThunk(["tsla", "amzn", "atvi"]);
   };
 
   render() {
@@ -47,8 +51,8 @@ const mapState = state => {
 
 const mapDispatch = dispatch => {
   return {
-    getPricesThunk: symbol =>
-      dispatch(getPricesThunk(symbol)),
+    getPricesThunk: symbols =>
+      dispatch(getPricesThunk(symbols)),
   };
 };
 
