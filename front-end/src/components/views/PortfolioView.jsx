@@ -6,16 +6,16 @@ import HoldingCard from "./HoldingCard"
 
 const PortfolioView = (props) => {
   console.log("kiwi", props.holdings)
-  let HoldingCards = []
+  let holdingCards = []
   if (props.holdings) {
     for (let i = 0; i < props.holdings.length; i++) {
-      HoldingCards.push(<HoldingCard data={props.holdings[i]} />)
+      holdingCards.push(<HoldingCard data={props.holdings[i]} />)
     }
   }
   return (
     <div>
       PortfolioView here
-      {HoldingCards}
+      {holdingCards}
     </div>
   )
 }

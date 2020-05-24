@@ -7,8 +7,9 @@ const HoldingCard = (props) => {
   return (
     <div class="holding-card">
       HoldingCard here
-      <p>Ticker: {props.data.symbol}</p>
+      <p>Symbol: {props.data.symbol}</p>
       <p>{props.data.shares} shares</p>
+      <p>Price: </p>
     </div>
   )
 }

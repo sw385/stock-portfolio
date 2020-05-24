@@ -14,6 +14,6 @@ export { default as TransactionsView } from "./views/TransactionsView.jsx";
 export { default as NotFound } from "./views/NotFound.jsx";
 
 export { default as HoldingCard } from "./views/HoldingCard.jsx";
-export { default as TransactionCar } from "./views/TransactionCard.jsx";
+export { default as TransactionCard } from "./views/TransactionCard.jsx";
 
 export { default as Navbar } from "./views/Navbar.jsx";

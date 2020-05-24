@@ -12,14 +12,17 @@ class TransactionsContainer extends Component {
     return (
       <div>
         TransactionsContainer here
-        <TransactionsView />
+        <TransactionsView transactions={this.props.transactions}/>
       </div>
     );
   }
 }
 
 const mapState = state => {
-  return {};
+  console.log(state)
+  return {
+    transactions: state.pricesReducer.transactions,
+  }
 };
 
 const mapDispatch = dispatch => {
