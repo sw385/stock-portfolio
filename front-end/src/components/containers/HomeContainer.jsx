@@ -2,10 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 // import { action } from "../../store/utilities/Home"; // Get the action creator for ____?
 import HomeView from "../views/HomeView";
-import {
-  getCurrentPriceThunk,
-  getOpenPriceThunk
-} from "../../store/utilities/prices";
+import { getPricesThunk } from "../../store/utilities/prices";
 
 class HomeContainer extends Component {
   constructor(props) {
@@ -13,8 +10,7 @@ class HomeContainer extends Component {
   }
 
   componentDidMount = () => {
-    this.props.getCurrentPriceThunk("mmm");
-    this.props.getOpenPriceThunk("mmm");
+    this.props.getPricesThunk("mmm");
   };
 
   render() {
@@ -51,9 +47,8 @@ const mapState = state => {
 
 const mapDispatch = dispatch => {
   return {
-    getCurrentPriceThunk: symbol =>
-      dispatch(getCurrentPriceThunk(symbol)),
-    getOpenPriceThunk: symbol => dispatch(getOpenPriceThunk(symbol))
+    getPricesThunk: symbol =>
+      dispatch(getPricesThunk(symbol)),
   };
 };
 
