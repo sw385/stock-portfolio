@@ -1,11 +1,17 @@
-import React from "react";
-import PropTypes from "prop-types";
+import React from "react"
+import PropTypes from "prop-types"
 
-// import "../views/HoldingCard.css";
+import "../views/HoldingCard.css";
 
-const HoldingCard = props => {
-  return <div>HoldingCard here</div>;
-};
+const HoldingCard = (props) => {
+  return (
+    <div class="holding-card">
+      HoldingCard here
+      <p>Ticker: {props.data.symbol}</p>
+      <p>{props.data.shares} shares</p>
+    </div>
+  )
+}
 
 // StudentCard.propTypes = {
 //   image: PropTypes.string.isRequired,
@@ -16,4 +22,4 @@ const HoldingCard = props => {
 //   buttonText: PropTypes.string.isRequired
 // };
 
-export default HoldingCard;
+export default HoldingCard

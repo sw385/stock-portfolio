@@ -12,15 +12,18 @@ class PortfolioContainer extends Component {
     return (
       <div>
         PortfolioContainer here
-        <PortfolioView />
+        <PortfolioView holdings={this.props.holdings}/>
       </div>
     );
   }
 }
 
 const mapState = state => {
-  return {};
-};
+  console.log(state)
+  return {
+    holdings: state.pricesReducer.holdings,
+  }
+}
 
 const mapDispatch = dispatch => {
   return {};
