@@ -9,7 +9,8 @@ const HoldingCard = (props) => {
       HoldingCard here
       <p>Symbol: {props.data.symbol}</p>
       <p>{props.data.shares} shares</p>
-      <p>Price: </p>
+      <p>Open price: ${props.price[0]}</p>
+      <p>Current price: ${props.price[1]}</p>
     </div>
   )
 }

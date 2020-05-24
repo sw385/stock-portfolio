@@ -48,8 +48,8 @@ export const getPricesThunk = (symbols) => async (dispatch) => {
     let dataObject = {}
     for (let symbol in data["data"]) {
       dataObject[symbol] = [
-        data["data"][symbol]["quote"]["open"],
-        data["data"][symbol]["quote"]["latestPrice"],
+        data["data"][symbol]["quote"]["open"].toFixed(2),
+        data["data"][symbol]["quote"]["latestPrice"].toFixed(2),
       ]
       //console.log(key)
       //console.log(data["data"][key]["quote"]["open"])
@@ -85,12 +85,11 @@ const pricesReducer = (state = {}, action) => {
           { datetime: "2020-04-01", symbol: "SPOT", shares: 45, side: "SELL" },
         ],
         holdings: [
-          { symbol: "ABC", shares: 21 },
-          { symbol: "CIA", shares: 22 },
-          { symbol: "FBI", shares: 23 },
-          { symbol: "NSA", shares: 24 },
-          { symbol: "TLA", shares: 25 },
-          { symbol: "FED", shares: 26 },
+          { symbol: "SPOT", shares: 21 },
+          { symbol: "BA", shares: 22 },
+          { symbol: "GOOG", shares: 23 },
+          { symbol: "TDOC", shares: 24 },
+          { symbol: "V", shares: 25 },
         ],
         prices: { MEOW: [12, 24] },
       }
