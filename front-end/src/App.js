@@ -9,11 +9,13 @@ import {
   RegisterContainer,
   PortfolioContainer,
   TransactionsContainer,
+  Navbar
 } from "./components"
 
 function App() {
   return (
     <div>
+      <Navbar/>
       <Router>
         <Switch>
           <Route exact path="/" component={HomeContainer} />
