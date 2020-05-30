@@ -4,6 +4,7 @@ import axios from "axios"
 const STORE_PRICES = "STORE_PRICES"
 const STORE_TRANSACTIONS = "STORE_TRANSACTIONS"
 const STORE_PORTFOLIO = "STORE_PORTFOLIO"
+const PREPEND_TRANSACTION = "PREPEND_TRANSACTION"
 
 // ACTION CREATORS
 /* ** move api keys out ** */
@@ -30,6 +31,15 @@ const storeTransactions = (dataObject) => {
 const storePortfolio = (dataObject) => {
   // dataObject is an Object
   // containing the balance and an array of holdings called portfolio
+  return {
+    type: STORE_PORTFOLIO,
+    payload: dataObject,
+  }
+}
+
+const prependTransaction = (dataObject) => {
+  // dataObject is the new balance
+  // and new transaction to be prepended to the array of existing transactions
   return {
     type: STORE_PORTFOLIO,
     payload: dataObject,
@@ -107,6 +117,17 @@ export const getPortfolioThunk = (username) => async (dispatch) => {
   }
 }
 
+export const buyStockThunk = (symbol, shares, price) => async (dispatch) => {
+  try {
+    const data = await axios.get(`http://localhost:3001/${username}/portfolio`)
+    let dataObject = data["data"]
+    console.log("buyStockThunk", dataObject)
+    dispatch(prependTransaction(dataObject))
+  } catch (error) {
+    console.log("Error in buyStockThunk:", error)
+  }
+}
+
 // REDUCER
 const pricesReducer = (state = {}, action) => {
   console.log("kiwi", action.payload)
@@ -131,6 +152,12 @@ const pricesReducer = (state = {}, action) => {
       return {
         ...state,
         portfolio: action.payload.portfolio,
+        balance: action.payload.balance,
+      }
+    case PREPEND_TRANSACTION:
+      return {
+        ...state,
+        portfolio: [action.payload.transaction, ...state["transactions"]],
         balance: action.payload.balance,
       }
     default:

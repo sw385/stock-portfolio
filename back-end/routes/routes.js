@@ -80,7 +80,14 @@ router.post("/:username/buy", async function (req, res, next) {
       )
     }
 
-    return res.json(transaction.rows[0])
+    let balance = await db.query(
+      "SELECT balance from users WHERE username=$1",
+      [req.params.username]
+    )
+    transaction.rows[0]["price"] = parseFloat(transaction.rows[0]["price"])
+    balance = parseFloat(balance.rows[0]["balance"])
+    let result = { balance: balance, transaction: transaction.rows[0] }
+    return res.json(result)
   } catch (err) {
     return next(err)
   }
@@ -126,7 +133,14 @@ router.post("/:username/sell", async function (req, res, next) {
       )
     }
 
-    return res.json(transaction.rows[0])
+    let balance = await db.query(
+      "SELECT balance from users WHERE username=$1",
+      [req.params.username]
+    )
+    transaction.rows[0]["price"] = parseFloat(transaction.rows[0]["price"])
+    balance = parseFloat(balance.rows[0]["balance"])
+    let result = { balance: balance, transaction: transaction.rows[0] }
+    return res.json(result)
   } catch (err) {
     return next(err)
   }
