@@ -70,6 +70,7 @@ export const getPricesThunk = (symbols) => async (dispatch) => {
       dataObject[symbol] = [
         data["data"][symbol]["quote"]["open"].toFixed(2),
         data["data"][symbol]["quote"]["latestPrice"].toFixed(2),
+        data["data"][symbol]["quote"]["companyName"]
       ]
       //console.log(key)
       //console.log(data["data"][key]["quote"]["open"])

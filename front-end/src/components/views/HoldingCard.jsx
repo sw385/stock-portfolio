@@ -11,10 +11,12 @@ const HoldingCard = (props) => {
   else if (props.price[1] > props.price[0]) {
     colorClass = "green"
   }
+  console.log(props)
   return (
     <div class="holding-card">
       HoldingCard here
       <p>Symbol: {props.data.symbol}</p>
+      <p>Company Name: {props.price[2]}</p>
       <p>{props.data.shares} shares</p>
       <p>Open price: ${props.price[0]}</p>
       <p class={colorClass}>Current price: ${props.price[1]}</p>

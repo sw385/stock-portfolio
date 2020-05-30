@@ -17,7 +17,7 @@ const PortfolioView = (props) => {
         prices = props.prices[props.holdings[i]["symbol"]]
       }
       else {
-        prices = ["---", "---"]
+        prices = ["---", "---", "---"]
       }
       holdingCards.push(<HoldingCard data={props.holdings[i]} price={prices}/>)
     }
