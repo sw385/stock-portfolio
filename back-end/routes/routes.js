@@ -13,7 +13,7 @@ router.get("/:username/transactions", async function (req, res, next) {
 
 router.get("/:username/portfolio", async function (req, res, next) {
   try {
-    const results = await db.query("SELECT * FROM holdings WHERE username=$1 ORDER BY symbol", [req.params.username])
+    const results = await db.query("SELECT * FROM portfolio WHERE username=$1 ORDER BY symbol", [req.params.username])
     return res.json(results.rows)
   } catch (err) {
     return next(err)
@@ -23,7 +23,9 @@ router.get("/:username/portfolio", async function (req, res, next) {
 router.post("/:username/buy", async function (req, res, next) {
   try {
     // if balance > price * shares:
-    const results = await db.query("SELECT * FROM holdings WHERE username=$1 ORDER BY symbol", [req.params.username])
+    // add middleware to check this BEFORE executing the changes
+    // return the new transaction?
+    const results = await db.query("SELECT * FROM portfolio WHERE username=$1 ORDER BY symbol", [req.params.symbol, req.params.shares, req.params.price])
     return res.json(results.rows)
   } catch (err) {
     return next(err)
