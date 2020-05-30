@@ -4,7 +4,7 @@ const db = require("../db");
 
 router.get("/:username/transactions", async function (req, res, next) {
   try {
-    const results = await db.query("SELECT * FROM transactions WHERE username=$1 ORDER BY datetime DESC", [req.params.username])
+    const results = await db.query("SELECT symbol, shares, price, is_buy, datetime FROM transactions WHERE username=$1 ORDER BY datetime DESC", [req.params.username])
     return res.json(results.rows)
   } catch (err) {
     return next(err)
@@ -13,7 +13,7 @@ router.get("/:username/transactions", async function (req, res, next) {
 
 router.get("/:username/portfolio", async function (req, res, next) {
   try {
-    const results = await db.query("SELECT * FROM portfolio WHERE username=$1 ORDER BY symbol", [req.params.username])
+    const results = await db.query("SELECT symbol, shares FROM portfolio WHERE username=$1 ORDER BY symbol", [req.params.username])
     return res.json(results.rows)
   } catch (err) {
     return next(err)
