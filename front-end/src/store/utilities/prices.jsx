@@ -99,7 +99,7 @@ export const getTransactionsThunk = (username) => async (dispatch) => {
       ]
     }
     console.log(dataObject)
-    dispatch(storePrices(dataObject))
+    dispatch(storeTransactions(data["data"]))
     */
   } catch (error) {
     console.log("Error in getTransactionsThunk:", error)

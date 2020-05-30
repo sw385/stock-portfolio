@@ -8,12 +8,15 @@ router.get("/:username/transactions", async function (req, res, next) {
       "SELECT balance from users WHERE username=$1",
       [req.params.username]
     )
-    balance = balance.rows[0]["balance"]
+    balance = parseFloat(balance.rows[0]["balance"])
     let results = await db.query(
       "SELECT symbol, shares, price, is_buy, datetime FROM transactions WHERE username=$1 ORDER BY datetime DESC",
       [req.params.username]
     )
-    results = {"balance": balance, "transactions": results.rows}
+    for (let i = 0; i < results.rows.length; i++) {
+      results.rows[i]["price"] = parseFloat(results.rows[i]["price"])
+    }
+    results = { balance: balance, transactions: results.rows }
     return res.json(results)
   } catch (err) {
     return next(err)
@@ -26,12 +29,15 @@ router.get("/:username/portfolio", async function (req, res, next) {
       "SELECT balance from users WHERE username=$1",
       [req.params.username]
     )
-    balance = balance.rows[0]["balance"]
+    balance = parseFloat(balance.rows[0]["balance"])
     let results = await db.query(
       "SELECT symbol, shares FROM portfolio WHERE username=$1 ORDER BY symbol",
       [req.params.username]
     )
-    results = {"balance": balance, "portfolio": results.rows}
+    for (let i = 0; i < results.rows.length; i++) {
+      results.rows[i]["price"] = parseFloat(results.rows[i]["price"])
+    }
+    results = { balance: balance, portfolio: results.rows }
     return res.json(results)
   } catch (err) {
     return next(err)
@@ -86,7 +92,7 @@ router.post("/:username/buy", async function (req, res, next) {
 router.post("/:username/sell", async function (req, res, next) {
   try {
     // if shares <= owned shares:
-      // and check that there are owned shares in the first place
+    // and check that there are owned shares in the first place
     // add middleware to check this BEFORE executing the changes
     // return the new transaction?
     let oldBalance = await db.query(
