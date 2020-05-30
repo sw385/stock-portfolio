@@ -34,9 +34,6 @@ router.get("/:username/portfolio", async function (req, res, next) {
       "SELECT symbol, shares FROM portfolio WHERE username=$1 ORDER BY symbol",
       [req.params.username]
     )
-    for (let i = 0; i < results.rows.length; i++) {
-      results.rows[i]["price"] = parseFloat(results.rows[i]["price"])
-    }
     results = { balance: balance, portfolio: results.rows }
     return res.json(results)
   } catch (err) {

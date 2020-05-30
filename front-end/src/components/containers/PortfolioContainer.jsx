@@ -2,7 +2,7 @@ import React, { Component } from "react"
 import { connect } from "react-redux"
 // import { action } from "../../store/utilities/Representative"; // Get the action creator for ____?
 import PortfolioView from "../views/PortfolioView"
-import { getPricesThunk } from "../../store/utilities/prices"
+import { getPricesThunk, getPortfolioThunk } from "../../store/utilities/prices"
 
 class PortfolioContainer extends Component {
   constructor(props) {
@@ -10,9 +10,10 @@ class PortfolioContainer extends Component {
   }
 
   componentWillMount() {
+    this.props.getPortfolioThunk("alice123")
     let symbols = []
-    for (let i = 0; i < this.props.holdings.length; i++) {
-      symbols.push(this.props.holdings[i]["symbol"])
+    for (let i = 0; i < this.props.portfolio.length; i++) {
+      symbols.push(this.props.portfolio[i]["symbol"])
     }
     // console.log(symbols)
     this.props.getPricesThunk(symbols)
@@ -24,7 +25,7 @@ class PortfolioContainer extends Component {
       <div>
         PortfolioContainer here
 
-        <PortfolioView holdings={this.props.holdings} prices={this.props.prices}/>
+        <PortfolioView holdings={this.props.portfolio} prices={this.props.prices}/>
       </div>
     )
   }
@@ -33,7 +34,7 @@ class PortfolioContainer extends Component {
 const mapState = (state) => {
   console.log(state)
   return {
-    holdings: state.pricesReducer.holdings,
+    portfolio: state.pricesReducer.portfolio,
     prices: state.pricesReducer.prices,
   }
 }
@@ -41,6 +42,9 @@ const mapState = (state) => {
 const mapDispatch = (dispatch) => {
   return {
     getPricesThunk: (symbols) => dispatch(getPricesThunk(symbols)),
+    getPortfolioThunk: (username) =>
+    dispatch(getPortfolioThunk(username)),
+
   }
 }
 

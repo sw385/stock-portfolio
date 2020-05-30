@@ -20,8 +20,7 @@ const storePrices = (dataObject) => {
 
 const storeTransactions = (dataObject) => {
   // dataObject is an Object
-  // where keys are stock ticker symbols
-  // and values are arrays [openPrice, currentPrice]
+  // containing the balance and an array of transactions
   return {
     type: STORE_TRANSACTIONS,
     payload: dataObject,
@@ -30,8 +29,7 @@ const storeTransactions = (dataObject) => {
 
 const storePortfolio = (dataObject) => {
   // dataObject is an Object
-  // where keys are stock ticker symbols
-  // and values are arrays [openPrice, currentPrice]
+  // containing the balance and an array of holdings called portfolio
   return {
     type: STORE_PORTFOLIO,
     payload: dataObject,
@@ -89,25 +87,28 @@ export const getTransactionsThunk = (username) => async (dispatch) => {
     const data = await axios.get(
       `http://localhost:3001/${username}/transactions`
     )
-    console.log("getTransactionsThunk", data["data"])
-    /*
-    let dataObject = {}
-    for (let symbol in data["data"]) {
-      dataObject[symbol] = [
-        data["data"][symbol]["quote"]["open"].toFixed(2),
-        data["data"][symbol]["quote"]["latestPrice"].toFixed(2),
-      ]
-    }
-    console.log(dataObject)
-    dispatch(storeTransactions(data["data"]))
-    */
+    let dataObject = data["data"]
+    console.log("getTransactionsThunk", dataObject)
+    dispatch(storeTransactions(dataObject))
   } catch (error) {
     console.log("Error in getTransactionsThunk:", error)
   }
 }
 
+export const getPortfolioThunk = (username) => async (dispatch) => {
+  try {
+    const data = await axios.get(`http://localhost:3001/${username}/portfolio`)
+    let dataObject = data["data"]
+    console.log("getPortfolioThunk", dataObject)
+    dispatch(storePortfolio(dataObject))
+  } catch (error) {
+    console.log("Error in getPortfolioThunk:", error)
+  }
+}
+
 // REDUCER
 const pricesReducer = (state = {}, action) => {
+  console.log("kiwi", action.payload)
   switch (action.type) {
     case STORE_PRICES:
       // create a new object, copy over everything from state, then add/overwrite the new price data that was fetched
@@ -118,6 +119,18 @@ const pricesReducer = (state = {}, action) => {
         // ...state, ...action.payload
         ...state,
         prices: { ...state["prices"], ...action.payload },
+      }
+    case STORE_TRANSACTIONS:
+      return {
+        ...state,
+        transactions: action.payload.transactions,
+        balance: action.payload.balance,
+      }
+    case STORE_PORTFOLIO:
+      return {
+        ...state,
+        portfolio: action.payload.portfolio,
+        balance: action.payload.balance,
       }
     default:
       // return state
@@ -152,7 +165,7 @@ const pricesReducer = (state = {}, action) => {
             price: 160,
           },
         ],
-        holdings: [
+        portfolio: [
           { symbol: "SPOT", shares: 21 },
           { symbol: "BA", shares: 22 },
           { symbol: "GOOG", shares: 23 },
