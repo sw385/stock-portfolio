@@ -42,7 +42,7 @@ export default connect(mapState, mapDispatch)(HomeContainer);
 
 
 const mapState = state => {
-  console.log(state);
+  // console.log(state);
   return {
     // photo: state.official,
     // store: state.official.officials

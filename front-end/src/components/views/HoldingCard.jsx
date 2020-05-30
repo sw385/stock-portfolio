@@ -11,7 +11,6 @@ const HoldingCard = (props) => {
   else if (props.price[1] > props.price[0]) {
     colorClass = "green"
   }
-  console.log(props)
   return (
     <div class="holding-card">
       HoldingCard here

@@ -4,7 +4,6 @@ import axios from "axios"
 const STORE_PRICES = "STORE_PRICES"
 const STORE_TRANSACTIONS = "STORE_TRANSACTIONS"
 const STORE_PORTFOLIO = "STORE_PORTFOLIO"
-const PREPEND_TRANSACTION = "PREPEND_TRANSACTION"
 
 // ACTION CREATORS
 /* ** move api keys out ** */
@@ -37,25 +36,16 @@ const storePortfolio = (dataObject) => {
   }
 }
 
-const prependTransaction = (dataObject) => {
-  // dataObject is the new balance
-  // and new transaction to be prepended to the array of existing transactions
-  return {
-    type: STORE_PORTFOLIO,
-    payload: dataObject,
-  }
-}
-
 // THUNK CREATORS
 export const getPricesThunk = (symbols) => async (dispatch) => {
   try {
-    console.log(symbols)
+    // console.log(symbols)
     let symbolsUpper = []
     for (var i = 0; i < symbols.length; i++) {
       symbolsUpper.push(symbols[i].toUpperCase())
     }
     let symbolsString = symbolsUpper.join(",")
-    console.log(symbolsString)
+    // console.log(symbolsString)
     // Query the api for the current price of the symbol
     // let apikey = "HA2BAXO7NH22OSEI"
     // symbol = symbol.toUpperCase()
@@ -72,21 +62,26 @@ export const getPricesThunk = (symbols) => async (dispatch) => {
     const data = await axios.get(
       `https://cloud.iexapis.com/stable/stock/market/batch?token=pk_a8f41bb7afc04a25b8dfd124cec4ba23&symbols=${symbolsString}&types=quote`
     )
-    console.log("getPricesThunk", data["data"])
+    // console.log("getPricesThunk", data["data"])
     // let current_price = data["data"]["Global Quote"]["05. price"]
     // let open_price = data["data"]["Global Quote"]["02. open"]
     let dataObject = {}
     for (let symbol in data["data"]) {
-      dataObject[symbol] = [
-        data["data"][symbol]["quote"]["open"].toFixed(2),
-        data["data"][symbol]["quote"]["latestPrice"].toFixed(2),
-        data["data"][symbol]["quote"]["companyName"]
-      ]
+      try {
+        dataObject[symbol] = [
+          data["data"][symbol]["quote"]["open"].toFixed(2),
+          data["data"][symbol]["quote"]["latestPrice"].toFixed(2),
+          data["data"][symbol]["quote"]["companyName"],
+        ]
+      }
+      catch (error) {
+        dataObject[symbol] = ["---", "---", "---"]
+      }
       //console.log(key)
       //console.log(data["data"][key]["quote"]["open"])
       //console.log(data["data"][key]["quote"]["latestPrice"])
     }
-    console.log(dataObject)
+    // (dataObject)
     dispatch(storePrices(dataObject))
   } catch (error) {
     console.log("Error in getPricesThunk:", error)
@@ -110,27 +105,48 @@ export const getPortfolioThunk = (username) => async (dispatch) => {
   try {
     const data = await axios.get(`http://localhost:3001/${username}/portfolio`)
     let dataObject = data["data"]
-    console.log("getPortfolioThunk", dataObject)
+    // console.log("getPortfolioThunk", dataObject)
     dispatch(storePortfolio(dataObject))
   } catch (error) {
     console.log("Error in getPortfolioThunk:", error)
   }
 }
 
-export const buyStockThunk = (symbol, shares, price) => async (dispatch) => {
+export const buyStockThunk = (username, symbol, shares, price) => async (
+  dispatch
+) => {
   try {
-    const data = await axios.get(`http://localhost:3001/${username}/portfolio`)
+    const data = await axios.post(`http://localhost:3001/${username}/buy`, {
+      symbol: symbol,
+      shares: shares,
+      price: price,
+    })
     let dataObject = data["data"]
     console.log("buyStockThunk", dataObject)
-    dispatch(prependTransaction(dataObject))
   } catch (error) {
     console.log("Error in buyStockThunk:", error)
   }
 }
 
+export const sellStockThunk = (username, symbol, shares, price) => async (
+  dispatch
+) => {
+  try {
+    const data = await axios.post(`http://localhost:3001/${username}/sell`, {
+      symbol: symbol,
+      shares: shares,
+      price: price,
+    })
+    let dataObject = data["data"]
+    console.log("sellStockThunk", dataObject)
+  } catch (error) {
+    console.log("Error in sellStockThunk:", error)
+  }
+}
+
 // REDUCER
 const pricesReducer = (state = {}, action) => {
-  console.log("kiwi", action.payload)
+  // console.log("kiwi", action.payload)
   switch (action.type) {
     case STORE_PRICES:
       // create a new object, copy over everything from state, then add/overwrite the new price data that was fetched
@@ -152,12 +168,6 @@ const pricesReducer = (state = {}, action) => {
       return {
         ...state,
         portfolio: action.payload.portfolio,
-        balance: action.payload.balance,
-      }
-    case PREPEND_TRANSACTION:
-      return {
-        ...state,
-        portfolio: [action.payload.transaction, ...state["transactions"]],
         balance: action.payload.balance,
       }
     default:

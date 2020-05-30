@@ -5,11 +5,11 @@ import HoldingCard from "./HoldingCard"
 // import "./PortfolioView.css";
 
 const PortfolioView = (props) => {
-  console.log("kiwi", props.holdings)
+  // console.log("kiwi", props.holdings)
   let holdingCards = []
-  console.log("props.prices", props.prices)
-  console.log("apple", props.holdings[1]["symbol"])
-  console.log("pineapple", props.prices[props.holdings[1]["symbol"]])
+  // console.log("props.prices", props.prices)
+  // console.log("apple", props.holdings[1]["symbol"])
+  // console.log("pineapple", props.prices[props.holdings[1]["symbol"]])
   if (props.holdings) {
     for (let i = 0; i < props.holdings.length; i++) {
       let prices

@@ -24,7 +24,7 @@ class TransactionsContainer extends Component {
 }
 
 const mapState = (state) => {
-  console.log(state)
+  // console.log(state)
   return {
     transactions: state.pricesReducer.transactions,
   }
