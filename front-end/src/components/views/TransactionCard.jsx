@@ -4,13 +4,21 @@ import PropTypes from "prop-types"
 import "../views/TransactionCard.css";
 
 const TransactionCard = (props) => {
+  let side = ""
+  if (props.data.is_buy) {
+    side = "Buy"
+  }
+  else {
+    side = "Sell"
+  }
   return (
     <div class="transaction-card">
       TransactionCard here
       <p>Datetime: {props.data.datetime}</p>
       <p>Symbol: {props.data.symbol}</p>
       <p>Shares: {props.data.shares}</p>
-      <p>Side: {props.data.side}</p>
+      <p>Price: {props.data.price}</p>
+      <p>Side: {side}</p>
     </div>
   )
 }

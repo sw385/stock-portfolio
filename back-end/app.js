@@ -3,7 +3,9 @@ const app = express();
 const bodyParser = require("body-parser");
 const morgan = require("morgan");
 const routes = require("./routes/routes");
+const cors = require('cors');
 
+app.use(cors());
 app.use(morgan("tiny"));
 app.use(bodyParser.json());
 app.use("/", routes);
@@ -27,6 +29,6 @@ if (app.get("env") === "development") {
   });
 }
 
-app.listen(3000, () => {
-  console.log("Getting started on port 3000!");
+app.listen(3001, () => {
+  console.log("Getting started on port 3001!");
 });

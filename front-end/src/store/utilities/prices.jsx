@@ -2,6 +2,8 @@ import axios from "axios"
 
 // ACTION TYPES
 const STORE_PRICES = "STORE_PRICES"
+const STORE_TRANSACTIONS = "STORE_TRANSACTIONS"
+const STORE_PORTFOLIO = "STORE_PORTFOLIO"
 
 // ACTION CREATORS
 /* ** move api keys out ** */
@@ -12,6 +14,26 @@ const storePrices = (dataObject) => {
   // and values are arrays [openPrice, currentPrice]
   return {
     type: STORE_PRICES,
+    payload: dataObject,
+  }
+}
+
+const storeTransactions = (dataObject) => {
+  // dataObject is an Object
+  // where keys are stock ticker symbols
+  // and values are arrays [openPrice, currentPrice]
+  return {
+    type: STORE_TRANSACTIONS,
+    payload: dataObject,
+  }
+}
+
+const storePortfolio = (dataObject) => {
+  // dataObject is an Object
+  // where keys are stock ticker symbols
+  // and values are arrays [openPrice, currentPrice]
+  return {
+    type: STORE_PORTFOLIO,
     payload: dataObject,
   }
 }
@@ -62,6 +84,28 @@ export const getPricesThunk = (symbols) => async (dispatch) => {
   }
 }
 
+export const getTransactionsThunk = (username) => async (dispatch) => {
+  try {
+    const data = await axios.get(
+      `http://localhost:3001/${username}/transactions`
+    )
+    console.log("getTransactionsThunk", data["data"])
+    /*
+    let dataObject = {}
+    for (let symbol in data["data"]) {
+      dataObject[symbol] = [
+        data["data"][symbol]["quote"]["open"].toFixed(2),
+        data["data"][symbol]["quote"]["latestPrice"].toFixed(2),
+      ]
+    }
+    console.log(dataObject)
+    dispatch(storePrices(dataObject))
+    */
+  } catch (error) {
+    console.log("Error in getTransactionsThunk:", error)
+  }
+}
+
 // REDUCER
 const pricesReducer = (state = {}, action) => {
   switch (action.type) {
@@ -79,10 +123,34 @@ const pricesReducer = (state = {}, action) => {
       // return state
       return {
         transactions: [
-          { datetime: "2020-01-01", symbol: "SPOT", shares: 75, side: "BUY" },
-          { datetime: "2020-02-01", symbol: "SPOT", shares: 25, side: "SELL" },
-          { datetime: "2020-03-01", symbol: "SPOT", shares: 35, side: "BUY" },
-          { datetime: "2020-04-01", symbol: "SPOT", shares: 45, side: "SELL" },
+          {
+            datetime: "2020-01-01",
+            symbol: "SPOT",
+            shares: 75,
+            is_buy: true,
+            price: 145,
+          },
+          {
+            datetime: "2020-02-01",
+            symbol: "SPOT",
+            shares: 25,
+            is_buy: false,
+            price: 140,
+          },
+          {
+            datetime: "2020-03-01",
+            symbol: "SPOT",
+            shares: 35,
+            is_buy: true,
+            price: 155,
+          },
+          {
+            datetime: "2020-04-01",
+            symbol: "SPOT",
+            shares: 45,
+            is_buy: false,
+            price: 160,
+          },
         ],
         holdings: [
           { symbol: "SPOT", shares: 21 },
