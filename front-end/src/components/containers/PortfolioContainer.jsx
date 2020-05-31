@@ -8,19 +8,26 @@ import {
   buyStockThunk,
   sellStockThunk,
 } from "../../store/utilities/prices"
+import jwtDecode from "jwt-decode"
 
 class PortfolioContainer extends Component {
   constructor(props) {
     super(props)
 
-    this.state = { buySymbol: "", buyShares: 1 , sellSymbol: "", sellShares: 1}
+    this.state = {
+      buySymbol: "",
+      buyShares: 1,
+      sellSymbol: "",
+      sellShares: 1,
+      currentUser: jwtDecode(localStorage.getItem("jwtToken")),
+    }
     this.handleChange = this.handleChange.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
 
-    // this.props.buyStockThunk("alice123", "PYPL", 15, 2)
-    // this.props.sellStockThunk("alice123", "PYPL", 5, 2)
-
-    this.props.getPortfolioThunk("alice123").then(() => {
+    // this.props.buyStockThunk(this.props.currentUser, "PYPL", 15, 2)
+    // this.props.sellStockThunk(this.props.currentUser, "PYPL", 5, 2)
+    console.log("lime", this.state.currentUser.username)
+    this.props.getPortfolioThunk(this.state.currentUser.username).then(() => {
       let symbols = []
       for (let i = 0; i < this.props.portfolio.length; i++) {
         symbols.push(this.props.portfolio[i]["symbol"])
@@ -33,9 +40,8 @@ class PortfolioContainer extends Component {
   handleChange(event) {
     if (event.target.name == "buySymbol" || event.target.name == "sellSymbol") {
       this.setState({ [event.target.name]: event.target.value.toUpperCase() })
-    }
-    else {
-    this.setState({ [event.target.name]: event.target.value })
+    } else {
+      this.setState({ [event.target.name]: event.target.value })
     }
     console.log(this.state)
   }
@@ -72,7 +78,6 @@ class PortfolioContainer extends Component {
           </label>
           <input type="submit" value="Buy" />
         </form>
-
         <form>
           <label>
             Symbol:
@@ -97,7 +102,6 @@ class PortfolioContainer extends Component {
           </label>
           <input type="submit" value="Sell" />
         </form>
-
         <PortfolioView
           holdings={this.props.portfolio}
           prices={this.props.prices}
@@ -112,6 +116,7 @@ const mapState = (state) => {
   return {
     portfolio: state.pricesReducer.portfolio,
     prices: state.pricesReducer.prices,
+    // currentUser: state.pricesReducer.username,
   }
 }
 

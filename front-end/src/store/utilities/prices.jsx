@@ -194,8 +194,8 @@ export const login = (user_email, password) => async (dispatch) => {
     let dataObject = data["data"]
     console.log("login", dataObject)
     dataObject.username = jwtDecode(dataObject.token).username
-    // localStorage.setItem('jwtToken', token);
-    // setAuthorizationToken(token);
+    localStorage.setItem('jwtToken', dataObject.token);
+    setAuthorizationToken(dataObject.token);
     dispatch(storeToken(dataObject))
   } catch (error) {
     console.log("Error in login async:", error)
@@ -207,8 +207,8 @@ export const logout = () => async (dispatch) => {
     // const data = await axios.get(`http://localhost:3001/${username}/portfolio`)
     // let dataObject = data["data"]
     // console.log("getPortfolioThunk", dataObject)
-    // localStorage.removeItem('jwtToken');
-    // setAuthorizationToken(false);
+    localStorage.removeItem('jwtToken');
+    setAuthorizationToken(false);
     dispatch(removeToken())
   } catch (error) {
     console.log("Error in logout async:", error)

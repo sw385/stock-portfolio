@@ -3,15 +3,18 @@ import { connect } from "react-redux"
 // import { action } from "../../store/utilities/Representative"; // Get the action creator for ____?
 import TransactionsView from "../views/TransactionsView"
 import { getTransactionsThunk } from "../../store/utilities/prices"
+import jwtDecode from "jwt-decode"
 
 class TransactionsContainer extends Component {
   constructor(props) {
     super(props)
+    this.state = {
+      currentUser: jwtDecode(localStorage.getItem("jwtToken")),
+    }
+    this.props.getTransactionsThunk(this.state.currentUser)
   }
 
-  componentWillMount() {
-    this.props.getTransactionsThunk("alice123")
-  }
+
 
   render() {
     return (
@@ -27,6 +30,7 @@ const mapState = (state) => {
   // console.log(state)
   return {
     transactions: state.pricesReducer.transactions,
+    // currentUser: state.pricesReducer.username,
   }
 }
 
