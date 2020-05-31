@@ -1,20 +1,23 @@
 const express = require("express")
 const router = express.Router()
 const db = require("../db")
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcrypt")
+const jsonwebtoken = require("jsonwebtoken")
+
+const SECRET = "Ranch Carnivore Subfloor"
 
 router.post("/register", async (req, res, next) => {
   try {
-    const hashedPassword = await bcrypt.hash(req.body.password, 10);
+    const hashedPassword = await bcrypt.hash(req.body.password, 10)
     const result = await db.query(
       "INSERT INTO users (username, user_email, pw_hash, balance, is_verified) VALUES ($1,$2,$3,5000,false) RETURNING username",
       [req.body.username, req.body.user_email, hashedPassword]
-    );
-    return res.json(result.rows[0]);
+    )
+    return res.json(result.rows[0])
   } catch (e) {
-    return next(e);
+    return next(e)
   }
-});
+})
 
 router.post("/login", async (req, res, next) => {
   try {
@@ -22,26 +25,73 @@ router.post("/login", async (req, res, next) => {
     const foundUser = await db.query(
       "SELECT * FROM users WHERE user_email=$1 LIMIT 1",
       [req.body.user_email]
-    );
+    )
     if (foundUser.rows.length === 0) {
-      return res.json({ message: "Invalid user email" });
+      return res.json({ message: "Invalid user email" })
     }
     // if the user exists, compare the submitted password hash to the hash on file
     const hashedPassword = await bcrypt.compare(
       req.body.password,
       foundUser.rows[0].pw_hash
-    );
+    )
     // if false, then the submitted password is not correct
     if (hashedPassword === false) {
-      return res.json({ message: "Invalid password" });
+      return res.json({ message: "Invalid password" })
     }
-    return res.json({ message: "Logged in!" });
+
+    // let's create a token using the sign() method
+    const token = jsonwebtoken.sign(
+      // the first parameter is an object which will become the payload of the token
+      { username: foundUser.rows[0].username },
+      // the second parameter is the secret key we are using to "sign" or encrypt the token
+      SECRET,
+      // the third parameter is an object where we can specify certain properties of the token
+      {
+        expiresIn: 60 * 60, // expire in one hour
+      }
+    )
+    // send back an object with the key of token and the value of the token variable defined above
+    return res.json({ token })
   } catch (e) {
-    return res.json(e);
+    return res.json(e)
+  }
+})
+
+// helpful middleware to make sure the user is logged in
+function ensureLoggedIn(req, res, next) {
+  try {
+    const authHeaderValue = req.headers.authorization;
+    const token = jsonwebtoken.verify(authHeaderValue, SECRET);
+    return next();
+  } catch (e) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+}
+
+router.get("/secret", ensureLoggedIn, async function(req, res, next) {
+  try {
+    return res.json({ message: "You made it!" });
+  } catch (err) {
+    return res.json(err);
   }
 });
 
-router.get("/:username/transactions", async function (req, res, next) {
+// helpful middleware to make sure the username stored on the token is the same as the request
+function ensureCorrectUser(req, res, next) {
+  try {
+    const authHeaderValue = req.headers.authorization;
+    const token = jsonwebtoken.verify(authHeaderValue, SECRET);
+    if (token.username === req.params.username) {
+      return next();
+    } else {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+  } catch (e) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+}
+
+router.get("/:username/transactions", ensureCorrectUser, async function (req, res, next) {
   try {
     let balance = await db.query(
       "SELECT balance from users WHERE username=$1",
@@ -62,7 +112,7 @@ router.get("/:username/transactions", async function (req, res, next) {
   }
 })
 
-router.get("/:username/portfolio", async function (req, res, next) {
+router.get("/:username/portfolio", ensureCorrectUser, async function (req, res, next) {
   try {
     let balance = await db.query(
       "SELECT balance from users WHERE username=$1",
@@ -80,7 +130,7 @@ router.get("/:username/portfolio", async function (req, res, next) {
   }
 })
 
-router.post("/:username/buy", async function (req, res, next) {
+router.post("/:username/buy", ensureCorrectUser, async function (req, res, next) {
   try {
     // if balance >= price * shares:
     // add middleware to check this BEFORE executing the changes
@@ -132,7 +182,7 @@ router.post("/:username/buy", async function (req, res, next) {
   }
 })
 
-router.post("/:username/sell", async function (req, res, next) {
+router.post("/:username/sell", ensureCorrectUser, async function (req, res, next) {
   try {
     // if shares <= owned shares:
     // and check that there are owned shares in the first place
