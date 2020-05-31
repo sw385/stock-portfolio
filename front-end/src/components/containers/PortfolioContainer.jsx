@@ -13,6 +13,10 @@ class PortfolioContainer extends Component {
   constructor(props) {
     super(props)
 
+    this.state = { buySymbol: "", buyShares: 1 , sellSymbol: "", sellShares: 1}
+    this.handleChange = this.handleChange.bind(this)
+    this.handleSubmit = this.handleSubmit.bind(this)
+
     // this.props.buyStockThunk("alice123", "PYPL", 15, 2)
     // this.props.sellStockThunk("alice123", "PYPL", 5, 2)
 
@@ -26,10 +30,74 @@ class PortfolioContainer extends Component {
     })
   }
 
+  handleChange(event) {
+    if (event.target.name == "buySymbol" || event.target.name == "sellSymbol") {
+      this.setState({ [event.target.name]: event.target.value.toUpperCase() })
+    }
+    else {
+    this.setState({ [event.target.name]: event.target.value })
+    }
+    console.log(this.state)
+  }
+
+  handleSubmit(event) {
+    event.preventDefault()
+  }
+
   render() {
     return (
       <div>
         PortfolioContainer here
+        <form>
+          <label>
+            Symbol:
+            <input
+              type="text"
+              name="buySymbol"
+              maxLength="6"
+              value={this.state.buySymbol}
+              onChange={this.handleChange}
+            />
+          </label>
+          <label>
+            Number of shares to buy:
+            <input
+              type="number"
+              id="buyShares"
+              name="buyShares"
+              min="1"
+              value={this.state.buyShares}
+              onChange={this.handleChange}
+            ></input>
+          </label>
+          <input type="submit" value="Buy" />
+        </form>
+
+        <form>
+          <label>
+            Symbol:
+            <input
+              type="text"
+              name="sellSymbol"
+              maxLength="6"
+              value={this.state.sellSymbol}
+              onChange={this.handleChange}
+            />
+          </label>
+          <label>
+            Number of shares to buy:
+            <input
+              type="number"
+              id="sellShares"
+              name="sellShares"
+              min="1"
+              value={this.state.sellShares}
+              onChange={this.handleChange}
+            ></input>
+          </label>
+          <input type="submit" value="Sell" />
+        </form>
+
         <PortfolioView
           holdings={this.props.portfolio}
           prices={this.props.prices}

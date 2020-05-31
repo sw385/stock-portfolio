@@ -1,6 +1,6 @@
-import React from "react";
-import PropTypes from "prop-types";
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import React from "react"
+import PropTypes from "prop-types"
+import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom"
 
 // import "../views/Navbar.css";
 
@@ -14,8 +14,8 @@ const Navbar = (props) => {
       <Link to="/portfolio">Portfolio</Link>
       <Link to="/transactions">Transactions</Link>
       */}
-      <a href="/signin">Sign In</a>
       <a href="/register">Register</a>
+      <a href="/signin">Sign In</a>
       <a href="/portfolio">Portfolio</a>
       <a href="/transactions">Transactions</a>
     </div>
