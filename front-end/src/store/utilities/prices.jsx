@@ -1,9 +1,12 @@
 import axios from "axios"
+import jwtDecode from "jwt-decode"
 
 // ACTION TYPES
 const STORE_PRICES = "STORE_PRICES"
 const STORE_TRANSACTIONS = "STORE_TRANSACTIONS"
 const STORE_PORTFOLIO = "STORE_PORTFOLIO"
+const STORE_TOKEN = "STORE_TOKEN"
+const REMOVE_TOKEN = "REMOVE_TOKEN"
 
 // ACTION CREATORS
 /* ** move api keys out ** */
@@ -33,6 +36,22 @@ const storePortfolio = (dataObject) => {
   return {
     type: STORE_PORTFOLIO,
     payload: dataObject,
+  }
+}
+
+const storeToken = (dataObject) => {
+  // dataObject is an Object
+  // containing the returned token and the decoded username
+  return {
+    type: STORE_TOKEN,
+    payload: dataObject,
+  }
+}
+
+const removeToken = () => {
+  return {
+    type: REMOVE_TOKEN,
+    payload: {},
   }
 }
 
@@ -73,8 +92,7 @@ export const getPricesThunk = (symbols) => async (dispatch) => {
           data["data"][symbol]["quote"]["latestPrice"].toFixed(2),
           data["data"][symbol]["quote"]["companyName"],
         ]
-      }
-      catch (error) {
+      } catch (error) {
         dataObject[symbol] = ["---", "---", "---"]
       }
       //console.log(key)
@@ -144,6 +162,59 @@ export const sellStockThunk = (username, symbol, shares, price) => async (
   }
 }
 
+export function setAuthorizationToken(token) {
+  if (token) {
+    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+  } else {
+    delete axios.defaults.headers.common['Authorization'];
+  }
+}
+
+export const register = (username, user_email, password) => async (dispatch) => {
+  try {
+    const data = await axios.post(`http://localhost:3001/register`, {
+      username: username,
+      user_email: user_email,
+      password: password,
+    })
+    let dataObject = data["data"]
+    console.log("register", dataObject)
+    // dispatch(storePortfolio(dataObject))
+  } catch (error) {
+    console.log("Error in register async:", error)
+  }
+}
+
+export const login = (user_email, password) => async (dispatch) => {
+  try {
+    const data = await axios.post(`http://localhost:3001/login`, {
+      user_email: user_email,
+      password: password,
+    })
+    let dataObject = data["data"]
+    console.log("login", dataObject)
+    dataObject.username = jwtDecode(dataObject.token).username
+    // localStorage.setItem('jwtToken', token);
+    // setAuthorizationToken(token);
+    dispatch(storeToken(dataObject))
+  } catch (error) {
+    console.log("Error in login async:", error)
+  }
+}
+
+export const logout = () => async (dispatch) => {
+  try {
+    // const data = await axios.get(`http://localhost:3001/${username}/portfolio`)
+    // let dataObject = data["data"]
+    // console.log("getPortfolioThunk", dataObject)
+    // localStorage.removeItem('jwtToken');
+    // setAuthorizationToken(false);
+    dispatch(removeToken())
+  } catch (error) {
+    console.log("Error in logout async:", error)
+  }
+}
+
 // REDUCER
 const pricesReducer = (state = {}, action) => {
   // console.log("kiwi", action.payload)
@@ -169,6 +240,18 @@ const pricesReducer = (state = {}, action) => {
         ...state,
         portfolio: action.payload.portfolio,
         balance: action.payload.balance,
+      }
+    case STORE_TOKEN:
+      return {
+        ...state,
+        token: action.payload.token,
+        username: action.payload.username
+      }
+    case REMOVE_TOKEN:
+      return {
+        ...state,
+        token: "",
+        username: ""
       }
     default:
       // return state
@@ -211,6 +294,8 @@ const pricesReducer = (state = {}, action) => {
           { symbol: "V", shares: 25 },
         ],
         prices: { MEOW: [12, 24] },
+        token: "",
+        username: ""
       }
   }
 }

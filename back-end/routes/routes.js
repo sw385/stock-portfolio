@@ -68,14 +68,6 @@ function ensureLoggedIn(req, res, next) {
   }
 }
 
-router.get("/secret", ensureLoggedIn, async function(req, res, next) {
-  try {
-    return res.json({ message: "You made it!" });
-  } catch (err) {
-    return res.json(err);
-  }
-});
-
 // helpful middleware to make sure the username stored on the token is the same as the request
 function ensureCorrectUser(req, res, next) {
   try {

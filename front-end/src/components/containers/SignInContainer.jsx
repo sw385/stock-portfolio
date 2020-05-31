@@ -1,11 +1,12 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
+import React, { Component } from "react"
+import { connect } from "react-redux"
 // import { action } from "../../store/utilities/Representative"; // Get the action creator for ____?
-import SignInView from "../views/SignInView";
+import SignInView from "../views/SignInView"
+import { login } from "../../store/utilities/prices"
 
 class SignInContainer extends Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = { email: "", password: "" }
     this.handleChange = this.handleChange.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
@@ -18,13 +19,14 @@ class SignInContainer extends Component {
 
   handleSubmit(event) {
     event.preventDefault()
+    this.props.login(this.state.email, this.state.password)
   }
 
   render() {
     return (
       <div>
         SignInContainer here
-        <form>
+        <form onSubmit={this.handleSubmit}>
           <label>
             E-mail address:
             <input
@@ -46,16 +48,19 @@ class SignInContainer extends Component {
           <input type="submit" value="Sign in" />
         </form>
       </div>
-    );
+    )
   }
 }
 
-const mapState = state => {
-  return {};
-};
+const mapState = (state) => {
+  return {}
+}
 
-const mapDispatch = dispatch => {
-  return {};
-};
+const mapDispatch = (dispatch) => {
+  return {
+    login: (user_email, password) =>
+      dispatch(login(user_email, password)),
+  }
+}
 
-export default connect(mapState, mapDispatch)(SignInContainer);
+export default connect(mapState, mapDispatch)(SignInContainer)

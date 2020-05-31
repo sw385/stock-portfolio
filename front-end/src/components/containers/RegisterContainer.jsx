@@ -2,6 +2,7 @@ import React, { Component } from "react"
 import { connect } from "react-redux"
 // import { action } from "../../store/utilities/Representative"; // Get the action creator for ____?
 import RegisterView from "../views/RegisterView"
+import { register } from "../../store/utilities/prices"
 
 class RegisterContainer extends Component {
   constructor(props) {
@@ -18,13 +19,16 @@ class RegisterContainer extends Component {
 
   handleSubmit(event) {
     event.preventDefault()
+    // console.log("apple")
+    this.props.register(this.state.username, this.state.email, this.state.password)
+    
   }
 
   render() {
     return (
       <div>
         RegisterContainer here
-        <form>
+        <form onSubmit={this.handleSubmit}>
           <label>
             Username:
             <input
@@ -64,7 +68,10 @@ const mapState = (state) => {
 }
 
 const mapDispatch = (dispatch) => {
-  return {}
+  return {
+    register: (username, user_email, password) =>
+      dispatch(register(username, user_email, password)),
+  }
 }
 
 export default connect(mapState, mapDispatch)(RegisterContainer)
