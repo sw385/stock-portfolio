@@ -19,15 +19,15 @@ class PortfolioContainer extends Component {
       buyShares: 1,
       sellSymbol: "",
       sellShares: 1,
-      currentUser: jwtDecode(localStorage.getItem("jwtToken")),
+      currentUser: jwtDecode(localStorage.getItem("jwtToken")).username,
     }
     this.handleChange = this.handleChange.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
 
     // this.props.buyStockThunk(this.props.currentUser, "PYPL", 15, 2)
     // this.props.sellStockThunk(this.props.currentUser, "PYPL", 5, 2)
-    console.log("lime", this.state.currentUser.username)
-    this.props.getPortfolioThunk(this.state.currentUser.username).then(() => {
+    console.log("lime", this.state.currentUser)
+    this.props.getPortfolioThunk(this.state.currentUser).then(() => {
       let symbols = []
       for (let i = 0; i < this.props.portfolio.length; i++) {
         symbols.push(this.props.portfolio[i]["symbol"])

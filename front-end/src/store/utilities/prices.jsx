@@ -108,8 +108,14 @@ export const getPricesThunk = (symbols) => async (dispatch) => {
 
 export const getTransactionsThunk = (username) => async (dispatch) => {
   try {
+    // setAuthorizationToken(localStorage.getItem("jwtToken"))
     const data = await axios.get(
-      `http://localhost:3001/${username}/transactions`
+      `http://localhost:3001/${username}/transactions`,
+      {
+        headers: {
+          Authorization: `${localStorage.getItem("jwtToken")}`,
+        },
+      }
     )
     let dataObject = data["data"]
     console.log("getTransactionsThunk", dataObject)
@@ -121,7 +127,15 @@ export const getTransactionsThunk = (username) => async (dispatch) => {
 
 export const getPortfolioThunk = (username) => async (dispatch) => {
   try {
-    const data = await axios.get(`http://localhost:3001/${username}/portfolio`)
+    // setAuthorizationToken(localStorage.getItem("jwtToken"))
+    const data = await axios.get(
+      `http://localhost:3001/${username}/portfolio`,
+      {
+        headers: {
+          Authorization: `${localStorage.getItem("jwtToken")}`,
+        },
+      }
+    )
     let dataObject = data["data"]
     // console.log("getPortfolioThunk", dataObject)
     dispatch(storePortfolio(dataObject))
@@ -162,15 +176,19 @@ export const sellStockThunk = (username, symbol, shares, price) => async (
   }
 }
 
+/*
 export function setAuthorizationToken(token) {
   if (token) {
-    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    axios.defaults.headers.common["Authorization"] = `Bearer ${token}`
   } else {
-    delete axios.defaults.headers.common['Authorization'];
+    delete axios.defaults.headers.common["Authorization"]
   }
 }
+*/
 
-export const register = (username, user_email, password) => async (dispatch) => {
+export const register = (username, user_email, password) => async (
+  dispatch
+) => {
   try {
     const data = await axios.post(`http://localhost:3001/register`, {
       username: username,
@@ -194,8 +212,8 @@ export const login = (user_email, password) => async (dispatch) => {
     let dataObject = data["data"]
     console.log("login", dataObject)
     dataObject.username = jwtDecode(dataObject.token).username
-    localStorage.setItem('jwtToken', dataObject.token);
-    setAuthorizationToken(dataObject.token);
+    localStorage.setItem("jwtToken", dataObject.token)
+    // setAuthorizationToken(localStorage.getItem("jwtToken"))
     dispatch(storeToken(dataObject))
   } catch (error) {
     console.log("Error in login async:", error)
@@ -207,8 +225,8 @@ export const logout = () => async (dispatch) => {
     // const data = await axios.get(`http://localhost:3001/${username}/portfolio`)
     // let dataObject = data["data"]
     // console.log("getPortfolioThunk", dataObject)
-    localStorage.removeItem('jwtToken');
-    setAuthorizationToken(false);
+    localStorage.removeItem("jwtToken")
+    // setAuthorizationToken(false)
     dispatch(removeToken())
   } catch (error) {
     console.log("Error in logout async:", error)
@@ -245,13 +263,13 @@ const pricesReducer = (state = {}, action) => {
       return {
         ...state,
         token: action.payload.token,
-        username: action.payload.username
+        username: action.payload.username,
       }
     case REMOVE_TOKEN:
       return {
         ...state,
         token: "",
-        username: ""
+        username: "",
       }
     default:
       // return state
@@ -295,7 +313,7 @@ const pricesReducer = (state = {}, action) => {
         ],
         prices: { MEOW: [12, 24] },
         token: "",
-        username: ""
+        username: "",
       }
   }
 }

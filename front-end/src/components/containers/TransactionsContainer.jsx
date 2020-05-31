@@ -9,7 +9,7 @@ class TransactionsContainer extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      currentUser: jwtDecode(localStorage.getItem("jwtToken")),
+      currentUser: jwtDecode(localStorage.getItem("jwtToken")).username,
     }
     this.props.getTransactionsThunk(this.state.currentUser)
   }
