@@ -1,6 +1,45 @@
 const express = require("express")
 const router = express.Router()
 const db = require("../db")
+const bcrypt = require("bcrypt");
+
+router.post("/register", async (req, res, next) => {
+  try {
+    const hashedPassword = await bcrypt.hash(req.body.password, 10);
+    const result = await db.query(
+      "INSERT INTO users (username, user_email, pw_hash, balance, is_verified) VALUES ($1,$2,$3,5000,false) RETURNING username",
+      [req.body.username, req.body.user_email, hashedPassword]
+    );
+    return res.json(result.rows[0]);
+  } catch (e) {
+    return next(e);
+  }
+});
+
+router.post("/login", async (req, res, next) => {
+  try {
+    // see if the user exists
+    const foundUser = await db.query(
+      "SELECT * FROM users WHERE user_email=$1 LIMIT 1",
+      [req.body.user_email]
+    );
+    if (foundUser.rows.length === 0) {
+      return res.json({ message: "Invalid user email" });
+    }
+    // if the user exists, compare the submitted password hash to the hash on file
+    const hashedPassword = await bcrypt.compare(
+      req.body.password,
+      foundUser.rows[0].pw_hash
+    );
+    // if false, then the submitted password is not correct
+    if (hashedPassword === false) {
+      return res.json({ message: "Invalid password" });
+    }
+    return res.json({ message: "Logged in!" });
+  } catch (e) {
+    return res.json(e);
+  }
+});
 
 router.get("/:username/transactions", async function (req, res, next) {
   try {
