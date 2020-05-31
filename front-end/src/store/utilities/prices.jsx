@@ -144,32 +144,58 @@ export const getPortfolioThunk = (username) => async (dispatch) => {
   }
 }
 
-export const buyStockThunk = (username, symbol, shares, price) => async (
-  dispatch
-) => {
+export const buyStockThunk = (username, symbol, shares) => async (dispatch) => {
   try {
-    const data = await axios.post(`http://localhost:3001/${username}/buy`, {
-      symbol: symbol,
-      shares: shares,
-      price: price,
-    })
-    let dataObject = data["data"]
+    const priceData = await axios.get(
+      `https://cloud.iexapis.com/stable/stock/market/batch?token=pk_a8f41bb7afc04a25b8dfd124cec4ba23&symbols=${symbol}&types=quote`
+    )
+
+    let price = priceData["data"][symbol]["quote"]["latestPrice"].toFixed(2)
+
+    const response = await axios.post(
+      `http://localhost:3001/${username}/buy`,
+      {
+        symbol: symbol,
+        shares: shares,
+        price: price,
+      },
+      {
+        headers: {
+          Authorization: `${localStorage.getItem("jwtToken")}`,
+        },
+      }
+    )
+    let dataObject = response["data"]
     console.log("buyStockThunk", dataObject)
   } catch (error) {
     console.log("Error in buyStockThunk:", error)
   }
 }
 
-export const sellStockThunk = (username, symbol, shares, price) => async (
+export const sellStockThunk = (username, symbol, shares) => async (
   dispatch
 ) => {
   try {
-    const data = await axios.post(`http://localhost:3001/${username}/sell`, {
-      symbol: symbol,
-      shares: shares,
-      price: price,
-    })
-    let dataObject = data["data"]
+    const priceData = await axios.get(
+      `https://cloud.iexapis.com/stable/stock/market/batch?token=pk_a8f41bb7afc04a25b8dfd124cec4ba23&symbols=${symbol}&types=quote`
+    )
+
+    let price = priceData["data"][symbol]["quote"]["latestPrice"].toFixed(2)
+    console.log("guava", price)
+    const response = await axios.post(
+      `http://localhost:3001/${username}/sell`,
+      {
+        symbol: symbol,
+        shares: shares,
+        price: price,
+      },
+      {
+        headers: {
+          Authorization: `${localStorage.getItem("jwtToken")}`,
+        },
+      }
+    )
+    let dataObject = response["data"]
     console.log("sellStockThunk", dataObject)
   } catch (error) {
     console.log("Error in sellStockThunk:", error)

@@ -22,7 +22,8 @@ class PortfolioContainer extends Component {
       currentUser: jwtDecode(localStorage.getItem("jwtToken")).username,
     }
     this.handleChange = this.handleChange.bind(this)
-    this.handleSubmit = this.handleSubmit.bind(this)
+    this.handleBuy = this.handleBuy.bind(this)
+    this.handleSell = this.handleSell.bind(this)
 
     // this.props.buyStockThunk(this.props.currentUser, "PYPL", 15, 2)
     // this.props.sellStockThunk(this.props.currentUser, "PYPL", 5, 2)
@@ -46,15 +47,30 @@ class PortfolioContainer extends Component {
     console.log(this.state)
   }
 
-  handleSubmit(event) {
+  handleBuy(event) {
     event.preventDefault()
+    this.props.getPortfolioThunk(this.state.currentUser).then(() => {
+      let symbols = []
+      for (let i = 0; i < this.props.portfolio.length; i++) {
+        symbols.push(this.props.portfolio[i]["symbol"])
+      }
+      // console.log("yes", symbols)
+      this.props.getPricesThunk(symbols)
+    }).then(() => {this.props.buyStockThunk(this.state.currentUser, this.state.buySymbol, this.state.buyShares) })
+    
+  }
+
+  handleSell(event) {
+    event.preventDefault()
+
+    this.props.sellStockThunk(this.state.currentUser, this.state.sellSymbol, this.state.sellShares)
   }
 
   render() {
     return (
       <div>
         PortfolioContainer here
-        <form>
+        <form onSubmit={this.handleBuy}>
           <label>
             Symbol:
             <input
@@ -78,7 +94,8 @@ class PortfolioContainer extends Component {
           </label>
           <input type="submit" value="Buy" />
         </form>
-        <form>
+
+        <form onSubmit={this.handleSell}>
           <label>
             Symbol:
             <input
@@ -90,7 +107,7 @@ class PortfolioContainer extends Component {
             />
           </label>
           <label>
-            Number of shares to buy:
+            Number of shares to sell:
             <input
               type="number"
               id="sellShares"
@@ -124,10 +141,10 @@ const mapDispatch = (dispatch) => {
   return {
     getPricesThunk: (symbols) => dispatch(getPricesThunk(symbols)),
     getPortfolioThunk: (username) => dispatch(getPortfolioThunk(username)),
-    buyStockThunk: (username, symbol, shares, price) =>
-      dispatch(buyStockThunk(username, symbol, shares, price)),
-    sellStockThunk: (username, symbol, shares, price) =>
-      dispatch(sellStockThunk(username, symbol, shares, price)),
+    buyStockThunk: (username, symbol, shares) =>
+      dispatch(buyStockThunk(username, symbol, shares)),
+    sellStockThunk: (username, symbol, shares) =>
+      dispatch(sellStockThunk(username, symbol, shares)),
   }
 }
 
