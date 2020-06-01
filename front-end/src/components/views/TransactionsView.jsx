@@ -3,7 +3,7 @@ import { CSVLink, CSVDownload } from "react-csv"
 import TransactionCard from "./TransactionCard"
 
 // If you need cards or styling, you can uncomment the lines here to import
-// import "./TransactionsView.css";
+import "./TransactionsView.css";
 
 const TransactionsView = (props) => {
   let transactionCards = []

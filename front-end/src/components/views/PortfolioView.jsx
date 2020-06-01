@@ -2,7 +2,7 @@ import React from "react"
 import HoldingCard from "./HoldingCard"
 
 // If you need cards or styling, you can uncomment the lines here to import
-// import "./PortfolioView.css";
+import "./PortfolioView.css";
 
 const PortfolioView = (props) => {
   // console.log("kiwi", props.holdings)

@@ -1,0 +1,21 @@
+div.signin, div.register {
+  margin: auto;
+  margin-top: 200px;
+  text-align: center;
+}
+
+div.signin > form, div.register > form {
+  /*border-color: red;
+  border-style: solid;*/
+}
+
+div.signin label, div.register label {
+  margin-top: 100px;
+  /*border-color: green;
+  border-style: solid;*/
+  font-size: 30px;
+}
+
+div.signin input, div.register input {
+  font-size: 30px;
+}

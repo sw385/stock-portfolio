@@ -1,8 +1,9 @@
 import React, { Component } from "react"
 import { connect } from "react-redux"
 // import { action } from "../../store/utilities/Representative"; // Get the action creator for ____?
-import SignInView from "../views/SignInView"
+// import SignInView from "../views/SignInView"
 import { login } from "../../store/utilities/prices"
+import "./SignInContainer.css"
 
 class SignInContainer extends Component {
   constructor(props) {
@@ -30,8 +31,8 @@ class SignInContainer extends Component {
 
   render() {
     return (
-      <div>
-        <form onSubmit={this.handleSubmit}>
+      <div class="signin">
+        <form class="signin" onSubmit={this.handleSubmit}>
           <label>
             E-mail address:
             <input
@@ -41,6 +42,7 @@ class SignInContainer extends Component {
               onChange={this.handleChange}
             />
           </label>
+          <br />
           <label>
             Password:
             <input
@@ -50,6 +52,7 @@ class SignInContainer extends Component {
               onChange={this.handleChange}
             />
           </label>
+          <br />
           <input type="submit" value="Sign in" />
         </form>
       </div>
