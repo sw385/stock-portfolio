@@ -1,0 +1,12 @@
+div.navbar {
+  text-align: right;
+  margin-right: 120px;
+  font-size: 20px;
+}
+
+p.welcome {
+  font-size: 35px;
+}
+div.navbar a {
+  margin-left: 25px;
+}

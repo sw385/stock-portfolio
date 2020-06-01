@@ -128,9 +128,11 @@ class PortfolioContainer extends Component {
   }
 
   render() {
+
     return localStorage.getItem("jwtToken") !== null &&
       localStorage.getItem("jwtToken") !== "" ? (
       <div class="portfolio-body">
+        <h1>Portfolio</h1>
         <div class="portfolio-holdings">
           <PortfolioView
             holdings={this.props.portfolio}

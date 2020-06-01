@@ -5,7 +5,7 @@ import { connect } from "react-redux"
 import jwtDecode from "jwt-decode"
 import { withRouter } from "react-router"
 
-// import "../views/Navbar.css";
+import "../views/Navbar.css"
 
 class Navbar extends Component {
   constructor(props) {
@@ -36,7 +36,7 @@ class Navbar extends Component {
       }
     }
     return (
-      <div>
+      <div class="navbar">
         {/*
       <Link to="/signin">Sign In</Link>
       <Link to="/register">Register</Link>
@@ -48,7 +48,7 @@ class Navbar extends Component {
         localStorage.getItem("jwtToken") !== "undefined" &&
         localStorage.getItem("jwtToken") !== "" ? (
           <div>
-            <p>Welcome, {currentUser}</p>
+            <p class="welcome">Welcome, {currentUser}</p>
             <a href="/portfolio">Portfolio</a>
             <a href="/transactions">Transactions</a>
 
