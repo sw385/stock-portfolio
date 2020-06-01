@@ -78,6 +78,7 @@ export const getPricesThunk = (symbols) => async (dispatch) => {
     /*const data = await axios.get(
       `https://sandbox.iexapis.com/stable/stock/market/batch?token=Tpk_5c10e32528e44bdfbb34c2dca87cc0af&symbols=aapl,fb,tsla&types=quote,news,chart&range=1m&last=5`
     )*/
+    // console.log("symbolsString", symbolsString)
     const data = await axios.get(
       `https://cloud.iexapis.com/stable/stock/market/batch?token=pk_a8f41bb7afc04a25b8dfd124cec4ba23&symbols=${symbolsString}&types=quote`
     )
@@ -85,15 +86,24 @@ export const getPricesThunk = (symbols) => async (dispatch) => {
     // let current_price = data["data"]["Global Quote"]["05. price"]
     // let open_price = data["data"]["Global Quote"]["02. open"]
     let dataObject = {}
+    // console.log(data["data"])
     for (let symbol in data["data"]) {
       try {
+        let open
+        if (data["data"][symbol]["quote"]["open"] == null) {
+          open = data["data"][symbol]["quote"]["previousClose"].toFixed(2)
+        }
+        else {
+          data["data"][symbol]["quote"]["open"].toFixed(2)
+        }
         dataObject[symbol] = [
-          data["data"][symbol]["quote"]["open"].toFixed(2),
+          open,
           data["data"][symbol]["quote"]["latestPrice"].toFixed(2),
           data["data"][symbol]["quote"]["companyName"],
         ]
       } catch (error) {
         dataObject[symbol] = ["---", "---", "---"]
+        console.log(error)
       }
       //console.log(key)
       //console.log(data["data"][key]["quote"]["open"])
