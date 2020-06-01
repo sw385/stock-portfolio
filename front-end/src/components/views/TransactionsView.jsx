@@ -1,4 +1,5 @@
 import React from "react"
+import { CSVLink, CSVDownload } from "react-csv"
 import TransactionCard from "./TransactionCard"
 
 // If you need cards or styling, you can uncomment the lines here to import
@@ -11,11 +12,18 @@ const TransactionsView = (props) => {
       transactionCards.push(<TransactionCard data={props.transactions[i]} />)
     }
   }
+
+  const csvData = [
+    props.transactions
+  ]
+
   return (
     <div>
       {localStorage.getItem("jwtToken") !== null &&
       localStorage.getItem("jwtToken") !== "" ? (
-        transactionCards
+        <div>
+          <CSVLink filename="transactions_data.csv" data={props.transactions} headers={[`datetime`, `symbol`, `shares`, `is_buy`]}>Export as CSV</CSVLink>{transactionCards}
+        </div>
       ) : (
         <div></div>
       )}
