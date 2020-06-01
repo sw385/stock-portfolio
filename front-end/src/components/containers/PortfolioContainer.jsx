@@ -40,7 +40,7 @@ class PortfolioContainer extends Component {
     // this.props.buyStockThunk(this.props.currentUser, "PYPL", 15, 2)
     // this.props.sellStockThunk(this.props.currentUser, "PYPL", 5, 2)
     // console.log("lime", this.state.currentUser)
-    console.log("avocado")
+    // console.log("avocado")
     this.props.getPortfolioThunk(this.state.currentUser).then(() => {
       let symbols = []
       for (let i = 0; i < this.props.portfolio.length; i++) {
