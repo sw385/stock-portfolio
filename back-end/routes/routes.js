@@ -4,7 +4,7 @@ const db = require("../db")
 const bcrypt = require("bcrypt")
 const jsonwebtoken = require("jsonwebtoken")
 
-const SECRET = "Ranch Carnivore Subfloor"
+const SECRET = process.env.SECRET
 
 router.post("/register", async (req, res, next) => {
   try {

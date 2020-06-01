@@ -73,14 +73,14 @@ export const getPricesThunk = (symbols) => async (dispatch) => {
       `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${symbol}&apikey=${apikey}`
     )*/
     /*const data = await axios.get(
-      `https://cloud.iexapis.com/stable/stock/market/batch?token=pk_a8f41bb7afc04a25b8dfd124cec4ba23&symbols=aapl,fb,tsla&types=quote,news,chart&range=1m&last=5`
+      `https://cloud.iexapis.com/stable/stock/market/batch?token=process.env.APIKEY&symbols=aapl,fb,tsla&types=quote,news,chart&range=1m&last=5`
     )*/
     /*const data = await axios.get(
       `https://sandbox.iexapis.com/stable/stock/market/batch?token=Tpk_5c10e32528e44bdfbb34c2dca87cc0af&symbols=aapl,fb,tsla&types=quote,news,chart&range=1m&last=5`
     )*/
     // console.log("symbolsString", symbolsString)
     const data = await axios.get(
-      `https://cloud.iexapis.com/stable/stock/market/batch?token=pk_a8f41bb7afc04a25b8dfd124cec4ba23&symbols=${symbolsString}&types=quote`
+      `https://cloud.iexapis.com/stable/stock/market/batch?token=process.env.APIKEY&symbols=${symbolsString}&types=quote`
     )
     // console.log("getPricesThunk", data["data"])
     // let current_price = data["data"]["Global Quote"]["05. price"]
@@ -157,7 +157,7 @@ export const getPortfolioThunk = (username) => async (dispatch) => {
 export const buyStockThunk = (username, symbol, shares) => async (dispatch) => {
   try {
     const priceData = await axios.get(
-      `https://cloud.iexapis.com/stable/stock/market/batch?token=pk_a8f41bb7afc04a25b8dfd124cec4ba23&symbols=${symbol}&types=quote`
+      `https://cloud.iexapis.com/stable/stock/market/batch?token=process.env.APIKEY&symbols=${symbol}&types=quote`
     )
 
     let price = priceData["data"][symbol]["quote"]["latestPrice"].toFixed(2)
@@ -187,7 +187,7 @@ export const sellStockThunk = (username, symbol, shares) => async (
 ) => {
   try {
     const priceData = await axios.get(
-      `https://cloud.iexapis.com/stable/stock/market/batch?token=pk_a8f41bb7afc04a25b8dfd124cec4ba23&symbols=${symbol}&types=quote`
+      `https://cloud.iexapis.com/stable/stock/market/batch?token=process.env.APIKEY&symbols=${symbol}&types=quote`
     )
 
     let price = priceData["data"][symbol]["quote"]["latestPrice"].toFixed(2)
