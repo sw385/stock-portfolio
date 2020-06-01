@@ -6,7 +6,6 @@ import React from "react";
 const RegisterView = props => {
   return (
     <div>
-      RegisterView here
     </div>
   );
 };

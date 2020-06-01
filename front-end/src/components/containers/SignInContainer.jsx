@@ -23,13 +23,14 @@ class SignInContainer extends Component {
 
   handleSubmit(event) {
     event.preventDefault()
-    this.props.login(this.state.email, this.state.password)
+    this.props
+      .login(this.state.email, this.state.password)
+      .then(() => this.props.history.push("/portfolio"))
   }
 
   render() {
     return (
       <div>
-        SignInContainer here
         <form onSubmit={this.handleSubmit}>
           <label>
             E-mail address:
@@ -62,8 +63,7 @@ const mapState = (state) => {
 
 const mapDispatch = (dispatch) => {
   return {
-    login: (user_email, password) =>
-      dispatch(login(user_email, password)),
+    login: (user_email, password) => dispatch(login(user_email, password)),
   }
 }
 

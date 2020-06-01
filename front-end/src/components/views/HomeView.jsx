@@ -7,7 +7,6 @@ import React from "react";
 const HomeView = props => {
   return (
     <div>
-      HomeView here
     </div>
   );
 };

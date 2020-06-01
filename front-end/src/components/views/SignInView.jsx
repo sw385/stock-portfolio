@@ -6,7 +6,6 @@ import React from "react";
 const SignInView = props => {
   return (
     <div>
-      SignInView here
     </div>
   );
 };

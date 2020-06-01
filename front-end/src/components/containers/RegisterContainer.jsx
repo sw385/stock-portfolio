@@ -30,13 +30,13 @@ class RegisterContainer extends Component {
       this.state.email,
       this.state.password
     )
+    .then(() => this.props.history.push("/signin"))
   }
 
   render() {
     return (
       <div>
-        RegisterContainer here
-        <form onSubmit={this.handleSubmit}>
+        <form onSubmit={this.handleSubmit} >
           <label>
             Username:
             <input
@@ -44,6 +44,7 @@ class RegisterContainer extends Component {
               name="username"
               value={this.state.username}
               onChange={this.handleChange}
+              required
             />
           </label>
           <label>
@@ -53,6 +54,7 @@ class RegisterContainer extends Component {
               name="email"
               value={this.state.email}
               onChange={this.handleChange}
+              required
             />
           </label>
           <label>
@@ -62,6 +64,7 @@ class RegisterContainer extends Component {
               name="password"
               value={this.state.password}
               onChange={this.handleChange}
+              required
             />
           </label>
           <input type="submit" value="Register" />

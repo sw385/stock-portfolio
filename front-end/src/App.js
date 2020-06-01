@@ -1,6 +1,6 @@
-import React, { Component } from "react";
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
-import "./App.css";
+import React, { Component } from "react"
+import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom"
+import "./App.css"
 
 import {
   HomeContainer,
@@ -9,14 +9,14 @@ import {
   RegisterContainer,
   PortfolioContainer,
   TransactionsContainer,
-  Navbar
+  Navbar,
 } from "./components"
 
 function App() {
   return (
     <div>
-      <Navbar/>
       <Router>
+        <Navbar />
         <Switch>
           <Route exact path="/" component={HomeContainer} />
           <Route exact path="/signin" component={SignInContainer} />
@@ -28,7 +28,7 @@ function App() {
         </Switch>
       </Router>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
