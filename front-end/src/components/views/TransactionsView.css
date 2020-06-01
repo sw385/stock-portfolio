@@ -1,0 +1,11 @@
+div.transactions {
+  text-align:center;
+}
+
+div.transaction-cards {
+  margin-left: 200px;
+}
+
+div.transaction-card {
+  width: 400px;
+}

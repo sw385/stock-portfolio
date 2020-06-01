@@ -21,8 +21,11 @@ const TransactionsView = (props) => {
     <div>
       {localStorage.getItem("jwtToken") !== null &&
       localStorage.getItem("jwtToken") !== "" ? (
-        <div>
-          <CSVLink filename="transactions_data.csv" data={props.transactions} headers={[`datetime`, `symbol`, `shares`, `is_buy`]}>Export as CSV</CSVLink>{transactionCards}
+        <div class="transactions">
+          <h1>Transactions</h1>
+          <CSVLink filename="transactions_data.csv" data={props.transactions} headers={[`datetime`, `symbol`, `shares`, `is_buy`]}>Export as CSV</CSVLink>
+          <div class="transaction-cards">
+          {transactionCards}</div>
         </div>
       ) : (
         <div></div>
