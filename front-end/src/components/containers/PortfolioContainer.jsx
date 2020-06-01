@@ -125,6 +125,11 @@ class PortfolioContainer extends Component {
   }
 
   render() {
+    let options = []
+    for (let i = 0; i < this.props.portfolio.length; i++) {
+      options.push(<option value={this.props.portfolio[i]["symbol"]}>{this.props.portfolio[i]["symbol"]}</option>)
+    }
+
     return localStorage.getItem("jwtToken") !== null &&
       localStorage.getItem("jwtToken") !== "" ? (
       <div>
@@ -156,13 +161,13 @@ class PortfolioContainer extends Component {
         <form onSubmit={this.handleSell}>
           <label>
             Symbol:
-            <input
-              type="text"
+            <select
               name="sellSymbol"
-              maxLength="6"
               value={this.state.sellSymbol}
               onChange={this.handleChange}
-            />
+            >
+              {options}
+            </select>
           </label>
           <label>
             Number of shares to sell:
