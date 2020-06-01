@@ -60,30 +60,34 @@ router.post("/login", async (req, res, next) => {
 // helpful middleware to make sure the user is logged in
 function ensureLoggedIn(req, res, next) {
   try {
-    const authHeaderValue = req.headers.authorization;
-    const token = jsonwebtoken.verify(authHeaderValue, SECRET);
-    return next();
+    const authHeaderValue = req.headers.authorization
+    const token = jsonwebtoken.verify(authHeaderValue, SECRET)
+    return next()
   } catch (e) {
-    return res.status(401).json({ message: "Unauthorized" });
+    return res.status(401).json({ message: "Unauthorized" })
   }
 }
 
 // helpful middleware to make sure the username stored on the token is the same as the request
 function ensureCorrectUser(req, res, next) {
   try {
-    const authHeaderValue = req.headers.authorization;
-    const token = jsonwebtoken.verify(authHeaderValue, SECRET);
+    const authHeaderValue = req.headers.authorization
+    const token = jsonwebtoken.verify(authHeaderValue, SECRET)
     if (token.username === req.params.username) {
-      return next();
+      return next()
     } else {
-      return res.status(401).json({ message: "Unauthorized" });
+      return res.status(401).json({ message: "Unauthorized" })
     }
   } catch (e) {
-    return res.status(401).json({ message: "Unauthorized" });
+    return res.status(401).json({ message: "Unauthorized" })
   }
 }
 
-router.get("/:username/transactions", ensureCorrectUser, async function (req, res, next) {
+router.get("/:username/transactions", ensureCorrectUser, async function (
+  req,
+  res,
+  next
+) {
   try {
     let balance = await db.query(
       "SELECT balance from users WHERE username=$1",
@@ -104,7 +108,11 @@ router.get("/:username/transactions", ensureCorrectUser, async function (req, re
   }
 })
 
-router.get("/:username/portfolio", ensureCorrectUser, async function (req, res, next) {
+router.get("/:username/portfolio", ensureCorrectUser, async function (
+  req,
+  res,
+  next
+) {
   try {
     let balance = await db.query(
       "SELECT balance from users WHERE username=$1",
@@ -122,7 +130,11 @@ router.get("/:username/portfolio", ensureCorrectUser, async function (req, res, 
   }
 })
 
-router.post("/:username/buy", ensureCorrectUser, async function (req, res, next) {
+router.post("/:username/buy", ensureCorrectUser, async function (
+  req,
+  res,
+  next
+) {
   try {
     // if balance >= price * shares:
     // add middleware to check this BEFORE executing the changes
@@ -133,6 +145,9 @@ router.post("/:username/buy", ensureCorrectUser, async function (req, res, next)
     )
     oldBalance = parseFloat(oldBalance.rows[0]["balance"])
     let newBalance = oldBalance - req.body.shares * req.body.price
+    if (newBalance < 0) {
+      return res.status(500).send({ message: "Insufficient balance" })
+    }
     await db.query("UPDATE users SET balance=$2 WHERE username=$1", [
       req.params.username,
       newBalance,
@@ -174,31 +189,24 @@ router.post("/:username/buy", ensureCorrectUser, async function (req, res, next)
   }
 })
 
-router.post("/:username/sell", ensureCorrectUser, async function (req, res, next) {
+router.post("/:username/sell", ensureCorrectUser, async function (
+  req,
+  res,
+  next
+) {
   try {
     // if shares <= owned shares:
     // and check that there are owned shares in the first place
     // add middleware to check this BEFORE executing the changes
     // return the new transaction?
-    let oldBalance = await db.query(
-      "SELECT balance from users WHERE username=$1",
-      [req.params.username]
-    )
-    oldBalance = parseFloat(oldBalance.rows[0]["balance"])
-    let newBalance = oldBalance + req.body.shares * req.body.price
-    await db.query("UPDATE users SET balance=$2 WHERE username=$1", [
-      req.params.username,
-      newBalance,
-    ])
-    const transaction = await db.query(
-      "INSERT INTO transactions (username, is_buy, symbol, shares, price) VALUES ($1, False, $2, $3, $4) RETURNING symbol, shares, price, is_buy, datetime",
-      [req.params.username, req.body.symbol, req.body.shares, req.body.price]
-    )
 
     let oldShares = await db.query(
       "SELECT shares from portfolio WHERE (username=$1 AND symbol=$2)",
       [req.params.username, req.body.symbol]
     )
+    if (parseInt(oldShares.rows[0]["shares"]) < parseInt(req.body.shares)) {
+      return res.status(500).send({ message: "Insufficient number of shares" })
+    }
     if (parseInt(oldShares.rows[0]["shares"]) == parseInt(req.body.shares)) {
       await db.query(
         "DELETE FROM portfolio WHERE (username=$1 AND symbol=$2)",
@@ -213,6 +221,21 @@ router.post("/:username/sell", ensureCorrectUser, async function (req, res, next
         [req.params.username, req.body.symbol, newShares]
       )
     }
+
+    let oldBalance = await db.query(
+      "SELECT balance from users WHERE username=$1",
+      [req.params.username]
+    )
+    oldBalance = parseFloat(oldBalance.rows[0]["balance"])
+    let newBalance = oldBalance + req.body.shares * req.body.price
+    await db.query("UPDATE users SET balance=$2 WHERE username=$1", [
+      req.params.username,
+      newBalance,
+    ])
+    const transaction = await db.query(
+      "INSERT INTO transactions (username, is_buy, symbol, shares, price) VALUES ($1, False, $2, $3, $4) RETURNING symbol, shares, price, is_buy, datetime",
+      [req.params.username, req.body.symbol, req.body.shares, req.body.price]
+    )
 
     let balance = await db.query(
       "SELECT balance from users WHERE username=$1",
