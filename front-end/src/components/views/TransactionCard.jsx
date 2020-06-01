@@ -13,7 +13,6 @@ const TransactionCard = (props) => {
   }
   return (
     <div class="transaction-card">
-      TransactionCard here
       <p>Datetime: {props.data.datetime}</p>
       <p>Symbol: {props.data.symbol}</p>
       <p>Shares: {props.data.shares}</p>

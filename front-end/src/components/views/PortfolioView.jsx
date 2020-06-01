@@ -24,7 +24,6 @@ const PortfolioView = (props) => {
   }
   return (
     <div>
-      PortfolioView here
       {holdingCards}
     </div>
   )

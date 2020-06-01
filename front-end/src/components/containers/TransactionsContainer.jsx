@@ -28,7 +28,6 @@ class TransactionsContainer extends Component {
   render() {
     return (
       <div>
-        TransactionsContainer here
         <TransactionsView transactions={this.props.transactions} />
       </div>
     )

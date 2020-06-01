@@ -16,7 +16,7 @@ class PortfolioContainer extends Component {
 
     let decodedUser = ""
     if (localStorage.getItem("jwtToken") !== null) {
-      const jwtToken = localStorage.getItem("jwtToken");
+      const jwtToken = localStorage.getItem("jwtToken")
       if (jwtToken !== "undefined" && jwtToken !== "") {
         decodedUser = jwtDecode(localStorage.getItem("jwtToken")).username
       }
@@ -49,7 +49,10 @@ class PortfolioContainer extends Component {
   handleChange(event) {
     if (event.target.name == "buySymbol" || event.target.name == "sellSymbol") {
       this.setState({
-        [event.target.name]: event.target.value.toUpperCase().replace(/\s+/g, "").replace(/[0-9]/g, ''),
+        [event.target.name]: event.target.value
+          .toUpperCase()
+          .replace(/\s+/g, "")
+          .replace(/[0-9]/g, ""),
       })
     } else {
       this.setState({ [event.target.name]: event.target.value })
@@ -122,9 +125,10 @@ class PortfolioContainer extends Component {
   }
 
   render() {
-    return (
+    return localStorage.getItem("jwtToken") !== null &&
+      localStorage.getItem("jwtToken") !== "" ? (
       <div>
-        PortfolioContainer here
+        <p>Available balance: ${this.props.balance}</p>
         <form onSubmit={this.handleBuy}>
           <label>
             Symbol:
@@ -178,6 +182,8 @@ class PortfolioContainer extends Component {
           prices={this.props.prices}
         />
       </div>
+    ) : (
+      <div></div>
     )
   }
 }
@@ -188,6 +194,7 @@ const mapState = (state) => {
     portfolio: state.pricesReducer.portfolio,
     prices: state.pricesReducer.prices,
     // currentUser: state.pricesReducer.username,
+    balance: state.pricesReducer.balance,
   }
 }
 

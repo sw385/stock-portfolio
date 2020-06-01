@@ -301,44 +301,9 @@ const pricesReducer = (state = {}, action) => {
     default:
       // return state
       return {
-        transactions: [
-          {
-            datetime: "2020-01-01",
-            symbol: "SPOT",
-            shares: 75,
-            is_buy: true,
-            price: 145,
-          },
-          {
-            datetime: "2020-02-01",
-            symbol: "SPOT",
-            shares: 25,
-            is_buy: false,
-            price: 140,
-          },
-          {
-            datetime: "2020-03-01",
-            symbol: "SPOT",
-            shares: 35,
-            is_buy: true,
-            price: 155,
-          },
-          {
-            datetime: "2020-04-01",
-            symbol: "SPOT",
-            shares: 45,
-            is_buy: false,
-            price: 160,
-          },
-        ],
-        portfolio: [
-          { symbol: "SPOT", shares: 21 },
-          { symbol: "BA", shares: 22 },
-          { symbol: "GOOG", shares: 23 },
-          { symbol: "TDOC", shares: 24 },
-          { symbol: "V", shares: 25 },
-        ],
-        prices: { MEOW: [12, 24] },
+        transactions: [],
+        portfolio: [],
+        prices: {},
         token: "",
         username: "",
       }
