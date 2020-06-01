@@ -13,11 +13,11 @@ const HoldingCard = (props) => {
   }
   return (
     <div class="holding-card">
-      <p class={colorClass}>Symbol: {props.data.symbol}</p>
-      <p>Company Name: {props.price[2]}</p>
-      <p>{props.data.shares} shares</p>
+      <p class={colorClass + " symbol"}>{props.data.symbol}</p>
+      <p class="company-name">{props.price[2]}</p>
+      <p>{props.data.shares} share(s)</p>
       <p>Open price: ${props.price[0]}</p>
-      <p class={colorClass}>Current price: ${props.price[1]}</p>
+      <p class={colorClass + " current"}>Current price: ${props.price[1]}</p>
     </div>
   )
 }

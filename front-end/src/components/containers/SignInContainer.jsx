@@ -32,7 +32,9 @@ class SignInContainer extends Component {
   render() {
     return (
       <div class="signin">
-        <form class="signin" onSubmit={this.handleSubmit}>
+        
+        <form onSubmit={this.handleSubmit}>
+        <h2>Sign In</h2>
           <label>
             E-mail address:
             <input

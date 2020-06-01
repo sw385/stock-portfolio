@@ -1,0 +1,28 @@
+.portfolio-body {
+  text-align:center;
+}
+
+p.balance {
+  font-size: 25px;
+}
+
+.portfolio-holdings {
+  display:inline-block;
+}
+
+.portfolio-form {
+  display: inline-block;
+  /* border-style:solid;
+  border-color: red; */
+  vertical-align: top;
+  text-align: right;
+  font-size: 20px;
+}
+
+.portfolio-form > form {
+  margin-top: 60px;
+}
+
+.portfolio-form > form input {
+  font-size: 20px;
+}

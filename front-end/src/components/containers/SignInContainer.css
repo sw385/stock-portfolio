@@ -1,12 +1,15 @@
 div.signin, div.register {
   margin: auto;
-  margin-top: 200px;
+  margin-top: 130px;
   text-align: center;
+  width: 60%;
 }
 
 div.signin > form, div.register > form {
-  /*border-color: red;
-  border-style: solid;*/
+  border-color: black;
+  border-style: solid;
+  padding: 60px;
+  padding-top: 10px;
 }
 
 div.signin label, div.register label {

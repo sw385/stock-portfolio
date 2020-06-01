@@ -32,11 +32,9 @@ class PortfolioContainer extends Component {
     this.handleChange = this.handleChange.bind(this)
     this.handleBuy = this.handleBuy.bind(this)
     this.handleSell = this.handleSell.bind(this)
-
   }
 
   componentWillMount() {
-
     // this.props.buyStockThunk(this.props.currentUser, "PYPL", 15, 2)
     // this.props.sellStockThunk(this.props.currentUser, "PYPL", 5, 2)
     // console.log("lime", this.state.currentUser)
@@ -132,60 +130,68 @@ class PortfolioContainer extends Component {
   render() {
     return localStorage.getItem("jwtToken") !== null &&
       localStorage.getItem("jwtToken") !== "" ? (
-      <div>
-        <p>Available balance: ${this.props.balance}</p>
-        <form onSubmit={this.handleBuy}>
-          <label>
-            Symbol:
-            <input
-              type="text"
-              name="buySymbol"
-              maxLength="6"
-              value={this.state.buySymbol}
-              onChange={this.handleChange}
-            />
-          </label>
-          <label>
-            Number of shares to buy:
-            <input
-              type="number"
-              id="buyShares"
-              name="buyShares"
-              min="1"
-              value={this.state.buyShares}
-              onChange={this.handleChange}
-            ></input>
-          </label>
-          <input type="submit" value="Buy" />
-        </form>
-        <form onSubmit={this.handleSell}>
-          <label>
-            Symbol:
-            <input
-              type="text"
-              name="sellSymbol"
-              maxLength="6"
-              value={this.state.sellSymbol}
-              onChange={this.handleChange}
-            />
-          </label>
-          <label>
-            Number of shares to sell:
-            <input
-              type="number"
-              id="sellShares"
-              name="sellShares"
-              min="1"
-              value={this.state.sellShares}
-              onChange={this.handleChange}
-            ></input>
-          </label>
-          <input type="submit" value="Sell" />
-        </form>
-        <PortfolioView
-          holdings={this.props.portfolio}
-          prices={this.props.prices}
-        />
+      <div class="portfolio-body">
+        <div class="portfolio-holdings">
+          <PortfolioView
+            holdings={this.props.portfolio}
+            prices={this.props.prices}
+          />
+        </div>
+        <div class="portfolio-form">
+          <p class="balance">Available balance: ${this.props.balance}</p>
+          <form onSubmit={this.handleBuy}>
+            <label>
+              Symbol:
+              <input
+                type="text"
+                name="buySymbol"
+                maxLength="6"
+                value={this.state.buySymbol}
+                onChange={this.handleChange}
+              />
+            </label>
+            <br />
+            <label>
+              Number of shares to buy:
+              <input
+                type="number"
+                id="buyShares"
+                name="buyShares"
+                min="1"
+                value={this.state.buyShares}
+                onChange={this.handleChange}
+              ></input>
+            </label>
+            <br />
+            <input type="submit" value="Buy" />
+          </form>
+          <form onSubmit={this.handleSell}>
+            <label>
+              Symbol:
+              <input
+                type="text"
+                name="sellSymbol"
+                maxLength="6"
+                value={this.state.sellSymbol}
+                onChange={this.handleChange}
+              />
+            </label>
+            <br />
+            <label>
+              Number of shares to sell:
+              <input
+                type="number"
+                id="sellShares"
+                name="sellShares"
+                min="1"
+                value={this.state.sellShares}
+                onChange={this.handleChange}
+              ></input>
+            </label>
+            <br />
+            <input type="submit" value="Sell" />
+          </form>
+        </div>
       </div>
     ) : (
       <div></div>

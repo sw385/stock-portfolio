@@ -3,8 +3,18 @@
   border-color: black;
   border-radius: 15px;
   margin: 15px;
-  padding: 15px;
+  padding: 5px;
   width: 200px;
+}
+
+p.symbol {
+  font-size: 25px;
+  margin: 2px;
+}
+
+p {
+  font-size: 18px;
+  margin: 2px;
 }
 
 .gray {

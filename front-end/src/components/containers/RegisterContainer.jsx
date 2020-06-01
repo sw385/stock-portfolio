@@ -35,6 +35,7 @@ class RegisterContainer extends Component {
     return (
       <div class="register">
         <form onSubmit={this.handleSubmit}>
+        <h2>Register</h2>
           <label>
             Username:
             <input
