@@ -13,15 +13,23 @@ class RegisterContainer extends Component {
   }
 
   handleChange(event) {
-    this.setState({ [event.target.name]: event.target.value })
-    console.log(this.state)
+    if (event.target.name != "password") {
+      this.setState({ [event.target.name]: event.target.value.trim() })
+    } else {
+      this.setState({ [event.target.name]: event.target.value })
+    }
+
+    // console.log(this.state)
   }
 
   handleSubmit(event) {
     event.preventDefault()
     // console.log("apple")
-    this.props.register(this.state.username, this.state.email, this.state.password)
-    
+    this.props.register(
+      this.state.username,
+      this.state.email,
+      this.state.password
+    )
   }
 
   render() {
@@ -50,7 +58,7 @@ class RegisterContainer extends Component {
           <label>
             Password:
             <input
-              type="text"
+              type="password"
               name="password"
               value={this.state.password}
               onChange={this.handleChange}

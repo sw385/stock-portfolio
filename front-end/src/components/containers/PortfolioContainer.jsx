@@ -14,12 +14,20 @@ class PortfolioContainer extends Component {
   constructor(props) {
     super(props)
 
+    let decodedUser = ""
+    if (localStorage.getItem("jwtToken") !== null) {
+      const jwtToken = localStorage.getItem("jwtToken");
+      if (jwtToken !== "undefined" && jwtToken !== "") {
+        decodedUser = jwtDecode(localStorage.getItem("jwtToken")).username
+      }
+    }
+
     this.state = {
       buySymbol: "",
       buyShares: 1,
       sellSymbol: "",
       sellShares: 1,
-      currentUser: jwtDecode(localStorage.getItem("jwtToken")).username,
+      currentUser: decodedUser,
     }
     this.handleChange = this.handleChange.bind(this)
     this.handleBuy = this.handleBuy.bind(this)
@@ -40,7 +48,9 @@ class PortfolioContainer extends Component {
 
   handleChange(event) {
     if (event.target.name == "buySymbol" || event.target.name == "sellSymbol") {
-      this.setState({ [event.target.name]: event.target.value.toUpperCase() })
+      this.setState({
+        [event.target.name]: event.target.value.toUpperCase().replace(/\s+/g, "").replace(/[0-9]/g, ''),
+      })
     } else {
       this.setState({ [event.target.name]: event.target.value })
     }
@@ -49,21 +59,66 @@ class PortfolioContainer extends Component {
 
   handleBuy(event) {
     event.preventDefault()
-    this.props.getPortfolioThunk(this.state.currentUser).then(() => {
-      let symbols = []
-      for (let i = 0; i < this.props.portfolio.length; i++) {
-        symbols.push(this.props.portfolio[i]["symbol"])
-      }
-      // console.log("yes", symbols)
-      this.props.getPricesThunk(symbols)
-    }).then(() => {this.props.buyStockThunk(this.state.currentUser, this.state.buySymbol, this.state.buyShares) })
-    
+    this.props
+      .getPortfolioThunk(this.state.currentUser)
+      .then(() => {
+        let symbols = []
+        for (let i = 0; i < this.props.portfolio.length; i++) {
+          symbols.push(this.props.portfolio[i]["symbol"])
+        }
+        // console.log("yes", symbols)
+        this.props.getPricesThunk(symbols)
+      })
+      .then(() => {
+        this.props
+          .buyStockThunk(
+            this.state.currentUser,
+            this.state.buySymbol,
+            this.state.buyShares
+          )
+          .then(() => {
+            this.props.getPortfolioThunk(this.state.currentUser).then(() => {
+              let symbols = []
+              for (let i = 0; i < this.props.portfolio.length; i++) {
+                symbols.push(this.props.portfolio[i]["symbol"])
+              }
+              // console.log("yes", symbols)
+              this.props.getPricesThunk(symbols)
+            })
+          })
+      })
   }
 
   handleSell(event) {
     event.preventDefault()
-
-    this.props.sellStockThunk(this.state.currentUser, this.state.sellSymbol, this.state.sellShares)
+    this.props
+      .getPortfolioThunk(this.state.currentUser)
+      .then(() => {
+        let symbols = []
+        for (let i = 0; i < this.props.portfolio.length; i++) {
+          symbols.push(this.props.portfolio[i]["symbol"])
+        }
+        // console.log("yes", symbols)
+        this.props.getPricesThunk(symbols)
+      })
+      .then(() => {
+        this.props
+          .sellStockThunk(
+            this.state.currentUser,
+            this.state.sellSymbol,
+            this.state.sellShares
+          )
+          .then(() => {
+            this.props.getPortfolioThunk(this.state.currentUser).then(() => {
+              let symbols = []
+              for (let i = 0; i < this.props.portfolio.length; i++) {
+                symbols.push(this.props.portfolio[i]["symbol"])
+              }
+              // console.log("yes", symbols)
+              this.props.getPricesThunk(symbols)
+            })
+          })
+      })
   }
 
   render() {
@@ -94,7 +149,6 @@ class PortfolioContainer extends Component {
           </label>
           <input type="submit" value="Buy" />
         </form>
-
         <form onSubmit={this.handleSell}>
           <label>
             Symbol:

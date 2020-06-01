@@ -8,8 +8,17 @@ import jwtDecode from "jwt-decode"
 class TransactionsContainer extends Component {
   constructor(props) {
     super(props)
+
+    let decodedUser = ""
+    if (localStorage.getItem("jwtToken") !== null) {
+      const jwtToken = localStorage.getItem("jwtToken");
+      if (jwtToken !== "undefined" && jwtToken !== "") {
+        decodedUser = jwtDecode(localStorage.getItem("jwtToken")).username
+      }
+    }
+
     this.state = {
-      currentUser: jwtDecode(localStorage.getItem("jwtToken")).username,
+      currentUser: decodedUser,
     }
     this.props.getTransactionsThunk(this.state.currentUser)
   }

@@ -13,8 +13,12 @@ class SignInContainer extends Component {
   }
 
   handleChange(event) {
-    this.setState({ [event.target.name]: event.target.value })
-    console.log(this.state)
+    if (event.target.name != "password") {
+      this.setState({ [event.target.name]: event.target.value.trim() })
+    } else {
+      this.setState({ [event.target.name]: event.target.value })
+    }
+    // console.log(this.state)
   }
 
   handleSubmit(event) {
@@ -39,7 +43,7 @@ class SignInContainer extends Component {
           <label>
             Password:
             <input
-              type="text"
+              type="password"
               name="password"
               value={this.state.password}
               onChange={this.handleChange}

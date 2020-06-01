@@ -251,7 +251,8 @@ export const logout = () => async (dispatch) => {
     // const data = await axios.get(`http://localhost:3001/${username}/portfolio`)
     // let dataObject = data["data"]
     // console.log("getPortfolioThunk", dataObject)
-    localStorage.removeItem("jwtToken")
+    // localStorage.removeItem("jwtToken")
+    localStorage.setItem("jwtToken", "")
     // setAuthorizationToken(false)
     dispatch(removeToken())
   } catch (error) {
